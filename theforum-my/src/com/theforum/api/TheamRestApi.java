@@ -52,11 +52,11 @@ public class TheamRestApi {
 					item.getForumPic()));
 
 		}
-		return Response.status(200).entity(tw_list).build();
+		//return Response.status(200).entity(tw_list).build();
 		//return  AllowCrossResponse.ResponseCors(200, tw_list);
 		
-//		 return  Response.status(200).entity(tw_list).header("Access-Control-Allow-Origin", "*")
-//		 .header("Access-Control-Allow-Methods", "GET, POST, DELETE,PUT").build();
+		 return  Response.status(200).entity(tw_list).header("Access-Control-Allow-Origin", "*")
+		 .header("Access-Control-Allow-Methods", "GET, POST, DELETE,PUT").build();
 	}
 
 	@GET
@@ -73,10 +73,10 @@ public class TheamRestApi {
 			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), ""); 
 			dw_list.add(dw);
 		}
-		return Response.status(200).entity(dw_list).build();
-		//return  AllowCrossResponse.ResponseCors(200, dw_list);
-//		return Response.status(200).entity(dw_list).header("Access-Control-Allow-Origin", "*")
-//				 .header("Access-Control-Allow-Methods", "GET, POST, DELETE,PUT").build();
+		//return Response.status(200).entity(dw_list).build();
+//		return  AllowCrossResponse.ResponseCors(200, dw_list);
+		return Response.status(200).entity(dw_list).header("Access-Control-Allow-Origin", "*")
+				 .header("Access-Control-Allow-Methods", "GET, POST, DELETE,PUT").build();
 	}
 
 	@POST
@@ -99,7 +99,9 @@ public class TheamRestApi {
 		theam.setForumDescription(tw.getText());
 		forumManager.saveOrUpdateForum(theam);
 
-		return Response.status(200).entity(jsonObject.toString()).build();
+		//return Response.status(200).entity(jsonObject.toString()).build();
+		return Response.status(200).entity(jsonObject.toString()).header("Access-Control-Allow-Origin", "*")
+		 .header("Access-Control-Allow-Methods", "GET, POST, DELETE,PUT").build();
 
 	}
 

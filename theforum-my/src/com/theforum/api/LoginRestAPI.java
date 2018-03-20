@@ -11,7 +11,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.json.JSONException;
@@ -21,7 +20,8 @@ import com.theforum.dao.UserManager;
 import com.theforum.dao.UserManagerImpl;
 import com.theforum.entities.Users;
 import com.theforum.json.AuthenticationDetails;
-import com.theforum.util.AllowCrossResponse;
+import com.theforum.json.UserWrapper;
+
 
 @Path("/login")
 public class LoginRestAPI {
@@ -96,16 +96,17 @@ public class LoginRestAPI {
 		JSONObject jsonObject = new JSONObject();
 		UserManager userManager = new UserManagerImpl();
 		Users cur_u = userManager.findByUserName(ad.getUsername());
-
+		UserWrapper uw = new UserWrapper();
+		
 		if (cur_u != null) {
 			String cur_uspass = cur_u.getUserPassword();
 			String ad_uspass = cur_u.getUserPassword();
 			if (cur_uspass == ad_uspass) {
-				jsonObject.put("username", cur_u.getUsername());
-				jsonObject.put("id", cur_u.getUserId());
-				jsonObject.put("firstName", cur_u.getUserFirstName());
-				jsonObject.put("lastName", cur_u.getUserSecondName());
-				jsonObject.put("token", "fake-jwt-token");
+				uw.setUsername(cur_u.getUsername());
+				uw.setId(cur_u.getUserId());
+				uw.setFirstname(cur_u.getUserFirstName());
+				uw.setLastname(cur_u.getUserSecondName());
+				uw.setToken("fake-jwt-token");
 			}
 		} else {
 			jsonObject.put("status", "failed");
@@ -118,6 +119,6 @@ public class LoginRestAPI {
 
 		return
 		// AllowCrossResponse.ResponseCors(200, jsonObject.toString());
-		Response.status(200).entity(jsonObject.toString()).build();
+		Response.status(200).entity(uw).build();
 	}
 }

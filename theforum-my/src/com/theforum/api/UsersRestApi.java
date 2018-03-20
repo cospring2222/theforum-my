@@ -54,7 +54,7 @@ public class UsersRestApi {
 	
 		List<UserWrapper> uw_list = new ArrayList<UserWrapper>();
 		for (Users item : users) {
-			UserWrapper uw = new UserWrapper(item.getUserId(),item.getUsername(),item.getUserFirstName(),item.getUserSecondName(),item.getUserPassword());
+			UserWrapper uw = new UserWrapper(item.getUserId(),item.getUsername(),item.getUserFirstName(),item.getUserSecondName(),item.getUserPassword(),"");
 			uw_list.add(uw);
 		}
 		return Response.status(200).entity(uw_list).build();
@@ -74,7 +74,7 @@ public class UsersRestApi {
 	
 		List<UserWrapper> uw_list = new ArrayList<UserWrapper>();
 		for (Users item : users) {
-			UserWrapper uw = new UserWrapper(item.getUserId(),item.getUsername(),item.getUserFirstName(),item.getUserSecondName(),item.getUserPassword());
+			UserWrapper uw = new UserWrapper(item.getUserId(),item.getUsername(),item.getUserFirstName(),item.getUserSecondName(),item.getUserPassword(),"");
 			uw_list.add(uw);
 		}
 		return Response.status(200).entity(uw_list).build();
