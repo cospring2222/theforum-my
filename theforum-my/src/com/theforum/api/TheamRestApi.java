@@ -52,11 +52,10 @@ public class TheamRestApi {
 					item.getForumPic()));
 
 		}
-		//return Response.status(200).entity(tw_list).build();
-		//return  AllowCrossResponse.ResponseCors(200, tw_list);
-		
-		 return  Response.status(200).entity(tw_list).header("Access-Control-Allow-Origin", "*")
-		 .header("Access-Control-Allow-Methods", "GET, POST, DELETE,PUT").build();
+		// return Response.status(200).entity(tw_list).build();
+		// return AllowCrossResponse.ResponseCors(200, tw_list);
+
+		return Response.status(200).entity(tw_list).build();
 	}
 
 	@GET
@@ -70,13 +69,12 @@ public class TheamRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), ""); 
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "");
 			dw_list.add(dw);
 		}
-		//return Response.status(200).entity(dw_list).build();
-//		return  AllowCrossResponse.ResponseCors(200, dw_list);
-		return Response.status(200).entity(dw_list).header("Access-Control-Allow-Origin", "*")
-				 .header("Access-Control-Allow-Methods", "GET, POST, DELETE,PUT").build();
+		// return Response.status(200).entity(dw_list).build();
+		// return AllowCrossResponse.ResponseCors(200, dw_list);
+		return Response.status(200).entity(dw_list).build();
 	}
 
 	@POST
@@ -99,17 +97,22 @@ public class TheamRestApi {
 		theam.setForumDescription(tw.getText());
 		forumManager.saveOrUpdateForum(theam);
 
-		//return Response.status(200).entity(jsonObject.toString()).build();
-		return Response.status(200).entity(jsonObject.toString()).header("Access-Control-Allow-Origin", "*")
-		 .header("Access-Control-Allow-Methods", "GET, POST, DELETE,PUT").build();
+		List<Forums> forums = forumManager.loadAllForums();
+		List<TheamWrapper> tw_list = new ArrayList<TheamWrapper>();
+		for (Forums item : forums) {
+			tw_list.add(new TheamWrapper(item.getForumId(), item.getForumName(), item.getForumDescription(),
+					item.getForumPic()));
+		}
 
+		return Response.status(200).entity(tw_list).build();
 	}
 
-	@DELETE
-	@Path("/delete")
+	// @DELETE
+	@GET
+	@Path("/delete/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	public Response deleteTheam(@QueryParam("theamID") Long theamID) throws JSONException {
+	public Response deleteTheam(@PathParam("id") Long theamID) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 
@@ -117,14 +120,22 @@ public class TheamRestApi {
 		Forums cur_t = forumManager.findForumById(theamID);
 		if (cur_t != null) {
 			forumManager.deleteForum(cur_t);
-
 		} else {
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Forum is not exists.");
-
+			return Response.status(400).entity(jsonObject).build();
 		}
 
-		return Response.status(200).entity(jsonObject.toString()).build();
+		List<Forums> forums = forumManager.loadAllForums();
+		List<TheamWrapper> tw_list = new ArrayList<TheamWrapper>();
+		for (Forums item : forums) {
+			tw_list.add(new TheamWrapper(item.getForumId(), item.getForumName(), item.getForumDescription(),
+					item.getForumPic()));
+		}
+
+		return Response.status(200).entity(tw_list)
+				.build();
+
 	}
 
 	@GET

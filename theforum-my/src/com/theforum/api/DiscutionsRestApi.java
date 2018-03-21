@@ -137,7 +137,15 @@ public class DiscutionsRestApi {
 
 		topicManager.saveOrUpdateTopic(topic);
 
-		return Response.status(200).entity(jsonObject.toString()).build();
+		forum = forumManager.findForumById(dwg.getTheamid());
+		List<Topics> topics = forum.getTopicses();
+		// return only topics relevant date ws DiscutionWrapper array
+		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
+		for (Topics item : topics) {
+			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "");
+			dw_list.add(new_dw);
+		}
+		return Response.status(200).entity(dw_list).build();		
 
 	}
 
@@ -151,16 +159,25 @@ public class DiscutionsRestApi {
 
 		// Long userID = 1;
 		Topics cur_t = topicManager.findTopicById(disscID);
-		if (cur_t != null) {
-			topicManager.deleteTopic(cur_t);
-
-		} else {
+		if (cur_t == null) {
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Disscution is not exists.");
-
+			
+			return Response.status(400).entity(jsonObject.toString()).build();
+		} 
+		
+		topicManager.deleteTopic(cur_t);
+		
+		Forums cur_forum = cur_t.getForums();
+		List<Topics> topics = cur_forum.getTopicses();
+		// return only topics relevant date ws DiscutionWrapper array
+		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
+		for (Topics item : topics) {
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "");
+			dw_list.add(dw);
 		}
+		return Response.status(200).entity(dw_list).build();	
 
-		return Response.status(200).entity(jsonObject.toString()).build();
 	}
 
 	@GET
@@ -172,15 +189,14 @@ public class DiscutionsRestApi {
 		JSONObject jsonObject = new JSONObject();
 
 		Topics cur_t = topicManager.findTopicById(disscID);
-		if (cur_t != null) {
-			return Response.status(200).entity(cur_t).build();
-		} else {
+		
+		if (cur_t == null){
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Disscution is not exists.");
-
+			return Response.status(400).entity(jsonObject.toString()).build();
 		}
-
-		return Response.status(200).entity(jsonObject.toString()).build();
+	
+		return Response.status(200).entity(cur_t).build();
 	}
 
 	@POST
@@ -219,8 +235,15 @@ public class DiscutionsRestApi {
 		// cur_dissc.setForumDescription(dw.getText()); //body?
 
 		topicManager.saveOrUpdateTopic(cur_dissc);
-
-		return Response.status(200).entity(jsonObject.toString()).build();
+		Forums cur_forum = cur_dissc.getForums();
+		List<Topics> topics = cur_forum.getTopicses();
+		// return only topics relevant date ws DiscutionWrapper array
+		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
+		for (Topics item : topics) {
+			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "");
+			dw_list.add(new_dw);
+		}
+		return Response.status(200).entity(dw_list).build();	
 	}
 
 }
