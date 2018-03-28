@@ -60,7 +60,7 @@ public class CommentsRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<CommentWrapper> cw_list = new ArrayList<CommentWrapper>();
 		for (Posts item : posts) {
-			CommentWrapper cw = new CommentWrapper(item.getPostId(), item.getUsers().getUsername(), item.getPostText());
+			CommentWrapper cw = new CommentWrapper(item.getPostId(),disscID, item.getUsers().getUsername(), item.getPostText(),new Long(0));
 			cw_list.add(cw);
 		}
 		return Response.status(200).entity(cw_list).build();
@@ -74,11 +74,11 @@ public class CommentsRestApi {
 		JSONObject jsonObject = new JSONObject();
 
 		Users cur_u = userManager.findUserById(userID);
-		List<Posts> posts = cur_u.getPostses();
+		List<Posts> posts = cur_u.getPostses();		
 		// return only topics relevant date ws DiscutionWrapper array
 		List<CommentWrapper> cw_list = new ArrayList<CommentWrapper>();
 		for (Posts item : posts) {
-			CommentWrapper cw = new CommentWrapper(item.getPostId(), item.getUsers().getUsername(), item.getPostText());
+			CommentWrapper cw = new CommentWrapper(item.getPostId(),item.getTopics().getTopicId(), item.getUsers().getUsername(), item.getPostText(),new Long(0));
 			cw_list.add(cw);
 		}
 		return Response.status(200).entity(cw_list).build();
@@ -91,18 +91,20 @@ public class CommentsRestApi {
 	// public Response createPost(CommentWrapper cw.@QueryParam("theamID") Long
 	// theamID,@QueryParam("userID") Long userID)
 	// throws JSONException {
-	public Response createPost(@QueryParam("body") String body, @QueryParam("disscID") Long disscID,
-			@QueryParam("userID") Long userID) throws JSONException {
+//	public Response createPost(@QueryParam("body") String body, @QueryParam("disscID") Long disscID,
+//			@QueryParam("userID") Long userID) throws JSONException {
+	public Response createPost(CommentWrapper cw)throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
-		if (body == null || body == "") {
+
+		if (cw.getBody() == null || cw.getBody() == "") {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Body  is mandatory").build());
 		}
 
 		Posts post = new Posts();
 
-		Topics topic = topicManager.findTopicById(disscID);
+		Topics topic = topicManager.findTopicById(cw.getDiscussionid());
 		if (topic == null) {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Parent topic is not exist").build());
@@ -111,7 +113,7 @@ public class CommentsRestApi {
 		post.setTopics(topic);
 		// set forum parent too?
 
-		Users user = userManager.findUserById(userID);
+		Users user = userManager.findByUserName(cw.getAuthor());
 		if (user == null) {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Parent user is not exist").build());
@@ -119,7 +121,7 @@ public class CommentsRestApi {
 		}
 		post.setUsers(user);
 
-		post.setPostText(body);
+		post.setPostText(cw.getBody());
 
 		postManager.saveOrUpdatePost(post);
 
@@ -168,7 +170,9 @@ public class CommentsRestApi {
 			}
 			String un=u.getUsername();
 			String body =cur_post.getPostText();
-			CommentWrapper cw = new CommentWrapper(ID,un,body);
+			//CommentWrapper cw = new CommentWrapper(ID,un,body);
+			//CommentWrapper cw = new CommentWrapper(item.getTopics().getTopicId(), item.getUsers().getUsername(), item.getPostText(),item.getPostId());
+			CommentWrapper cw = new CommentWrapper();
 			return Response.status(200).entity(cw).build();
 		} else {
 			jsonObject.put("status", "failed");
@@ -187,27 +191,27 @@ public class CommentsRestApi {
 
 		JSONObject jsonObject = new JSONObject();
 
-		if (cw.getId() == null) {
-			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("id is  mandatory").build());
-		}
-
-		if (cw.getBody() == null) {
-			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("body is mandatory").build());
-		}
-
-		Posts cur_comment = postManager.findPostById(cw.getId());
-		if (cur_comment == null) {
-			jsonObject.put("status", "failed");
-			jsonObject.put("message", "Comment is not exists.");
-			return Response.status(200).entity(jsonObject.toString()).build();
-		}
-
-		cur_comment.setPostText(cw.getBody());
-		// cur_dissc.setForumDescription(dw.getText()); //body?
-
-		postManager.saveOrUpdatePost(cur_comment);
+//		if (cw.getId() == null) {
+//			throw new WebApplicationException(
+//					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("id is  mandatory").build());
+//		}
+//
+//		if (cw.getBody() == null) {
+//			throw new WebApplicationException(
+//					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("body is mandatory").build());
+//		}
+//
+//		Posts cur_comment = postManager.findPostById(cw.getId());
+//		if (cur_comment == null) {
+//			jsonObject.put("status", "failed");
+//			jsonObject.put("message", "Comment is not exists.");
+//			return Response.status(200).entity(jsonObject.toString()).build();
+//		}
+//
+//		cur_comment.setPostText(cw.getBody());
+//		// cur_dissc.setForumDescription(dw.getText()); //body?
+//
+//		postManager.saveOrUpdatePost(cur_comment);
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
 
