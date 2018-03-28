@@ -2,7 +2,8 @@ package com.theforum.json;
 public class UserWrapper {
 	private Long id;
 	private String username;
-//	private String email;
+	private String role;
+	//	private String email;
 	private String firstname;
 	private String lastname;
 	private String password;
@@ -14,17 +15,25 @@ public class UserWrapper {
 		// TODO Auto-generated constructor stub
 	}
 
-
-	public UserWrapper(Long id, String username, String firstname, String lastname, String password, String token) {
+	public UserWrapper(Long id, String username, String role, String firstname, String lastname, String password,
+			String token) {
 		super();
 		this.id = id;
 		this.username = username;
+		this.role = role;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.password = password;
 		this.token = token;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	public Long getId() {
 		return id;
