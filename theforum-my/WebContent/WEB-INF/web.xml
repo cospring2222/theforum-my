@@ -29,6 +29,11 @@
 		<servlet-name>Jersey Web Application</servlet-name>
 		<url-pattern>/rest/api/*</url-pattern>
 	</servlet-mapping>	
+  <listener>
+    <listener-class>
+      com.theforum.util.ApplicationServletContextListener
+    </listener-class>
+  </listener>
 </web-app>	
 	
 	
