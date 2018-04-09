@@ -2,6 +2,7 @@ package com.theforum.json;
 
 import java.util.Date;
 
+//json Discussion(Topic)  model
 public class Theam {
 	
 	private Long id;

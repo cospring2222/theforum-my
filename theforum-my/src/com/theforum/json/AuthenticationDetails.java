@@ -1,5 +1,7 @@
 package com.theforum.json;
 
+// login json  model
+
 public class AuthenticationDetails {
 	 String username;
 	 String password;

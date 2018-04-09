@@ -1,5 +1,6 @@
 package com.theforum.json;
 
+// comment json model
 public class CommentWrapper {
 	private Long id;
 	private Long discussionid;

@@ -1,4 +1,6 @@
 package com.theforum.json;
+
+ //json user model
 public class UserWrapper {
 	private Long id;
 	private String username;

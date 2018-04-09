@@ -44,7 +44,7 @@ public class Forums implements java.io.Serializable {
 	public Forums() {
 		
 		setForumCreatedate(DateUtils.parseDate(LocalDate.now().toString()));
-		setForumPic("/Design/default_forum_pic.png");
+		setForumPic("assets/img/default_forum_pic.png");
 		setForumOrder(100);
 		
 	}

@@ -1,5 +1,6 @@
 package com.theforum.json;
 
+//json TheamCard(Forum) model
 public class TheamWrapper {
 	
 	private Long id;

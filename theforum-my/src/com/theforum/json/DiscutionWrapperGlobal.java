@@ -1,5 +1,6 @@
 package com.theforum.json;
 
+//global discussion json model
 public class DiscutionWrapperGlobal {
 	Theam theam;
 	Long theamid;

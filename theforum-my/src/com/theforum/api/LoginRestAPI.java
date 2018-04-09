@@ -22,7 +22,6 @@ import com.theforum.entities.Users;
 import com.theforum.json.AuthenticationDetails;
 import com.theforum.json.UserWrapper;
 
-
 @Path("/login")
 public class LoginRestAPI {
 	// for tests only json clinte
@@ -89,6 +88,7 @@ public class LoginRestAPI {
 
 	}
 
+	//login checking user and pass
 	@Path("/authenticate")
 	@POST
 	@Produces("application/json")
@@ -97,10 +97,14 @@ public class LoginRestAPI {
 		UserManager userManager = new UserManagerImpl();
 		Users cur_u = userManager.findByUserName(ad.getUsername());
 		UserWrapper uw = new UserWrapper();
-		
+
+		//check that  user exist
 		if (cur_u != null) {
+			//check that  pass is correct
+			
 			String cur_uspass = cur_u.getUserPassword();
-			String ad_uspass = cur_u.getUserPassword();
+			String ad_uspass = ad.getPassword();
+			
 			if (cur_uspass == ad_uspass) {
 				uw.setUsername(cur_u.getUsername());
 				uw.setId(cur_u.getUserId());
@@ -111,14 +115,10 @@ public class LoginRestAPI {
 		} else {
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Username or password is incorrect.");
-			return
-			// AllowCrossResponse.ResponseCors(400, jsonObject.toString());
-			Response.status(400).entity(jsonObject.toString()).build();
+			return Response.status(400).entity(jsonObject.toString()).build();
 
 		}
 
-		return
-		// AllowCrossResponse.ResponseCors(200, jsonObject.toString());
-		Response.status(200).entity(uw).build();
+		return Response.status(200).entity(uw).build();
 	}
 }

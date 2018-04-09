@@ -32,6 +32,7 @@ import com.theforum.entities.Forums;
 import com.theforum.entities.Topics;
 import com.theforum.entities.Users;
 import com.theforum.json.DiscutionWrapper;
+import com.theforum.json.UserRegisterWrapper;
 import com.theforum.json.UserWrapper;
 import com.theforum.util.Role;
 
@@ -60,7 +61,7 @@ public class UsersRestApi {
 	@Path("/list/page")
 	@POST
 	@Produces("application/json")
-	public Response getAllUsers(Object obj) throws JSONException {
+	public Response getAllUsersPagination(Object obj) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 
@@ -78,8 +79,8 @@ public class UsersRestApi {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	// public Response createUser(Object uw) throws JSONException {
-	public Response createUser(UserWrapper uw) throws JSONException {
+	//public Response createUser(Object uw) throws JSONException {
+	public Response createUser(UserRegisterWrapper uw) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
 		if (uw.getUsername() == null) {
@@ -96,19 +97,21 @@ public class UsersRestApi {
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("password  is mandatory").build());
 		}
 
+		//check if username alredy exist
 		String uw_un = uw.getUsername();
 		Users old_user = userManager.findByUserName(uw_un);
 		boolean userExsists = (old_user != null);
+		
 		if (userExsists) {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("username already in use").build());
 
 		}
-
+		//if username is avilible create new 
 		Users u = new Users();
 		u.setUserRole(Role.USER);
-		u.setUserFirstName(uw.getFirstname());
-		u.setUserSecondName(uw.getLastname());
+		u.setUserFirstName(uw.getFirstName());
+		u.setUserSecondName(uw.getLastName());
 		u.setUsername(uw.getUsername());
 		u.setUserPassword(uw.getPassword());
 		// u.setUserEmail(uw.getEmail());

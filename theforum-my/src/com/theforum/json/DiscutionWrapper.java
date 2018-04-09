@@ -1,7 +1,7 @@
 package com.theforum.json;
 
 import java.util.Date;
-
+//simple discussion json model
 public class DiscutionWrapper {
 	private Long id;
 	private String title;

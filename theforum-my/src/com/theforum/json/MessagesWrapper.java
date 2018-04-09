@@ -1,5 +1,6 @@
 package com.theforum.json;
 
+//mesages json model
 public class MessagesWrapper {
 	private Long id;
 	private String fromUserName;
