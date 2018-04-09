@@ -1,5 +1,8 @@
 package com.theforum.shell;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -39,7 +42,10 @@ public class DeletePosts implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		
 		  System.out.println("My First Quartz Scheduler"); 
-		  
+		  LocalDateTime now = LocalDateTime.now();
+		  String isoFormat = DateTimeFormatter.ISO_INSTANT.format(now.toInstant(ZoneOffset.UTC));
+		  System.out.println(isoFormat);
+
 		// List<Posts> posts = postManager.loadAllPosts();
 		//
 		// Calendar c=new GregorianCalendar();

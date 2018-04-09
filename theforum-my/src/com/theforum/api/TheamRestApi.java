@@ -92,7 +92,7 @@ public class TheamRestApi {
 
 		Forums theam = new Forums();
 		theam.setForumName(tw.getTitle());
-		// PIC? theam.setForumPic(tw.getPic());
+		theam.setForumPic(tw.getImg());
 
 		theam.setForumDescription(tw.getText());
 		forumManager.saveOrUpdateForum(theam);

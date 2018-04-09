@@ -16,7 +16,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -42,7 +42,7 @@ import com.theforum.json.TheamWrapper;
 public class UserMessagesRestApi {
 	UserMessageManager userMessageManager = new UserMessageManagerImpl();
 	UserManager userManager = new UserManagerImpl();
-	
+
 	@Path("/getall")
 	@GET
 	@Produces("application/json")
@@ -53,17 +53,19 @@ public class UserMessagesRestApi {
 		List<UserMessages> um_list = userMessageManager.loadAllUserMessages();
 		List<MessagesWrapper> mw_list = new ArrayList<MessagesWrapper>();
 		for (UserMessages item : um_list) {
-			mw_list.add(new MessagesWrapper(item.getId(),item.getUsermsgsSubject(),item.getUsermsgsText(),item.getUsersByUsermsgsToUserid().getUserId())); 
-			
+					mw_list.add(new MessagesWrapper(item.getId(), item.getUsersByUsermsgsFromUserid().getUsername(),
+					item.getUsersByUsermsgsToUserid().getUsername(), item.getUsermsgsSubject(),
+					item.getUsermsgsText()));
+
 		}
 
 		return Response.status(200).entity(um_list).build();
 	}
 
-	@Path("/getallbyuser")
+	@Path("/getallbyuser/{id}")
 	@GET
 	@Produces("application/json")
-	public Response getAllUserMessagesByUser(@QueryParam("userID") Long userID) throws JSONException {
+	public Response getAllUserMessagesByUser(@PathParam("id") Long userID) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 
@@ -72,11 +74,14 @@ public class UserMessagesRestApi {
 
 		List<MessagesWrapper> mw_list = new ArrayList<MessagesWrapper>();
 		for (UserMessages item : um_list) {
-			mw_list.add(new MessagesWrapper(item.getId(),item.getUsermsgsSubject(),item.getUsermsgsText(),item.getUsersByUsermsgsToUserid().getUserId()));
+
+			mw_list.add(new MessagesWrapper(item.getId(), item.getUsersByUsermsgsFromUserid().getUsername(),
+					item.getUsersByUsermsgsToUserid().getUsername(), item.getUsermsgsSubject(),
+					item.getUsermsgsText()));
 		}
 		return Response.status(200).entity(mw_list).build();
 	}
-	
+
 	@POST
 	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -89,7 +94,6 @@ public class UserMessagesRestApi {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Title  is mandatory").build());
 		}
-
 
 		UserMessages um = new UserMessages();
 		um.setUsermsgsSubject(mw.getTitle());

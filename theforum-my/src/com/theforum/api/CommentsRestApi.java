@@ -88,11 +88,6 @@ public class CommentsRestApi {
 	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	// public Response createPost(CommentWrapper cw.@QueryParam("theamID") Long
-	// theamID,@QueryParam("userID") Long userID)
-	// throws JSONException {
-//	public Response createPost(@QueryParam("body") String body, @QueryParam("disscID") Long disscID,
-//			@QueryParam("userID") Long userID) throws JSONException {
 	public Response createPost(CommentWrapper cw)throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
