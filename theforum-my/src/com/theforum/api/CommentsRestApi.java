@@ -89,6 +89,7 @@ public class CommentsRestApi {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
 	public Response createPost(CommentWrapper cw)throws JSONException {
+	//public Response createPost(Object cw)throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
 
@@ -108,7 +109,10 @@ public class CommentsRestApi {
 		post.setTopics(topic);
 		// set forum parent too?
 
-		Users user = userManager.findByUserName(cw.getAuthor());
+//		Users user = userManager.findByUserName(cw.getAuthor());
+		
+		
+		Users user = userManager.findUserById(new Long(1));
 		if (user == null) {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Parent user is not exist").build());
@@ -120,7 +124,7 @@ public class CommentsRestApi {
 
 		postManager.saveOrUpdatePost(post);
 
-		return Response.status(200).entity(jsonObject.toString()).build();
+		return Response.status(200).entity("Comment added").build();
 
 	}
 

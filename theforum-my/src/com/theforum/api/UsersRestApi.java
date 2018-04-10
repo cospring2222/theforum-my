@@ -32,6 +32,7 @@ import com.theforum.entities.Forums;
 import com.theforum.entities.Topics;
 import com.theforum.entities.Users;
 import com.theforum.json.DiscutionWrapper;
+import com.theforum.json.PaginationWrapper;
 import com.theforum.json.UserRegisterWrapper;
 import com.theforum.json.UserWrapper;
 import com.theforum.util.Role;
@@ -61,25 +62,30 @@ public class UsersRestApi {
 	@Path("/list/page")
 	@POST
 	@Produces("application/json")
-	public Response getAllUsersPagination(Object obj) throws JSONException {
-
-		JSONObject jsonObject = new JSONObject();
+	public Response getAllUsersPagination(PaginationWrapper pgw) throws JSONException {
 
 		List<Users> users = userManager.loadAllUsers();
 
 		List<UserWrapper> uw_list = new ArrayList<UserWrapper>();
+		int counter = 0;
 		for (Users item : users) {
-			UserWrapper uw = new UserWrapper(item.getUserId(), item.getUsername(),item.getUserRole().name(), item.getUserFirstName(),
-					item.getUserSecondName(), item.getUserPassword(), "");
-			uw_list.add(uw);
+			counter++;
+			if (pgw.getPageIndex() * pgw.getPageSize() <= counter
+					&& counter < (pgw.getPageIndex() + 1) * pgw.getPageSize()) 
+			{
+				UserWrapper uw = new UserWrapper(item.getUserId(), item.getUsername(), item.getUserRole().name(),
+						item.getUserFirstName(), item.getUserSecondName(), item.getUserPassword(), "");
+				uw_list.add(uw);
+			}
 		}
+
 		return Response.status(200).entity(uw_list).build();
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	//public Response createUser(Object uw) throws JSONException {
+	// public Response createUser(Object uw) throws JSONException {
 	public Response createUser(UserRegisterWrapper uw) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
@@ -97,17 +103,17 @@ public class UsersRestApi {
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("password  is mandatory").build());
 		}
 
-		//check if username alredy exist
+		// check if username alredy exist
 		String uw_un = uw.getUsername();
 		Users old_user = userManager.findByUserName(uw_un);
 		boolean userExsists = (old_user != null);
-		
+
 		if (userExsists) {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("username already in use").build());
 
 		}
-		//if username is avilible create new 
+		// if username is avilible create new
 		Users u = new Users();
 		u.setUserRole(Role.USER);
 		u.setUserFirstName(uw.getFirstName());
