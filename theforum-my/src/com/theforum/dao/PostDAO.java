@@ -1,12 +1,12 @@
 package com.theforum.dao;
 
+/**
+ * @author Uliana and David
+ */
 
 import com.theforum.entities.Posts;
 
  
-/**
- *
- * @author Uliana and David
- */
+
 public interface PostDAO extends GenericDAO<Posts, Long> {
 }

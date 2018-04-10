@@ -1,5 +1,9 @@
 package com.theforum.json;
 
+/**
+ * @author Uliana and David
+ */
+//pagination json model
 public class PaginationWrapper {
 	private int pageIndex;
 	private int length;

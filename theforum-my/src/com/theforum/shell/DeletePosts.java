@@ -1,5 +1,8 @@
 package com.theforum.shell;
 
+/**
+ * @author Uliana and David
+ */
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +20,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 
-
+//Delete old posts class as singelton for sheldure task
 public class DeletePosts implements Job {
 	private static volatile DeletePosts instance;
 	PostManager postManager = new PostManagerImpl();
@@ -40,12 +43,14 @@ public class DeletePosts implements Job {
 
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		
+		//test only task
 		  System.out.println("My First Quartz Scheduler"); 
 		  LocalDateTime now = LocalDateTime.now();
 		  String isoFormat = DateTimeFormatter.ISO_INSTANT.format(now.toInstant(ZoneOffset.UTC));
 		  System.out.println(isoFormat);
-
+		  
+		  //delete old posts task 
+		  
 		// List<Posts> posts = postManager.loadAllPosts();
 		//
 		// Calendar c=new GregorianCalendar();

@@ -1,5 +1,8 @@
 package com.theforum.json;
 
+/**
+ * @author Uliana and David
+ */
 // comment json model
 public class CommentWrapper {
 	private Long id;

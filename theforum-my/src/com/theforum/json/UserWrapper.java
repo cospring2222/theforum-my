@@ -1,5 +1,8 @@
 package com.theforum.json;
 
+/**
+ * @author Uliana and David
+ */
  //json user model
 public class UserWrapper {
 	private Long id;

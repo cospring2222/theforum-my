@@ -1,5 +1,8 @@
 package com.theforum.json;
 
+/**
+ * @author Uliana and David
+ */
 import java.util.Date;
 //simple discussion json model
 public class DiscutionWrapper {

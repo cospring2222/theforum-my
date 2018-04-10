@@ -1,5 +1,8 @@
 package com.theforum.json;
 
+/**
+ * @author Uliana and David
+ */
 //global discussion json model
 public class DiscutionWrapperGlobal {
 	Theam theam;

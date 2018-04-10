@@ -1,5 +1,8 @@
 package com.theforum.dao;
 
+/**
+ * @author Uliana and David
+ */
 import com.theforum.entities.Topics;
 
 import java.util.List;

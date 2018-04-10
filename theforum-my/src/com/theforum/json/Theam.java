@@ -2,6 +2,9 @@ package com.theforum.json;
 
 import java.util.Date;
 
+/**
+ * @author Uliana and David
+ */
 //json Discussion(Topic)  model
 public class Theam {
 	

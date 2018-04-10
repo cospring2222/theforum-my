@@ -1,5 +1,8 @@
 package com.theforum.json;
 
+/**
+ * @author Uliana and David
+ */
 //json TheamCard(Forum) model
 public class TheamWrapper {
 	

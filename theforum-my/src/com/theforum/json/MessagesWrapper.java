@@ -1,5 +1,8 @@
 package com.theforum.json;
 
+/**
+ * @author Uliana and David
+ */
 //mesages json model
 public class MessagesWrapper {
 	private Long id;

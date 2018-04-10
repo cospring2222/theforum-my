@@ -1,5 +1,7 @@
 package com.theforum.api;
-
+/**
+ * @author Uliana and David
+ */
 import java.net.HttpURLConnection;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,9 +11,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 
-/**
- * @author Uliana and David
- */
+
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -35,10 +35,13 @@ import com.theforum.json.DiscutionWrapper;
 import com.theforum.json.TheamWrapper;
 import com.theforum.util.AllowCrossResponse;
 
+//Rest API for Theam(Forum) tasks
 @Path("/theamslist")
 public class TheamRestApi {
+	//Tools for work with DB:
 	ForumManager forumManager = new ForumManagerImpl();
 
+	//API return list of all theams (forums)
 	@GET
 	@Produces("application/json")
 	public Response getAllTheams() throws JSONException {
@@ -58,6 +61,7 @@ public class TheamRestApi {
 		return Response.status(200).entity(tw_list).build();
 	}
 
+	//API return list of all disscusions(topics) by theam (forum) ID
 	@GET
 	@Path("{id}")
 	@Produces("application/json")
@@ -77,6 +81,7 @@ public class TheamRestApi {
 		return Response.status(200).entity(dw_list).build();
 	}
 
+	//API creating new theam(forum) with received date
 	@POST
 	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -107,6 +112,8 @@ public class TheamRestApi {
 		return Response.status(200).entity(tw_list).build();
 	}
 
+	
+	//API delete theam(forum) by giving  ID
 	// @DELETE
 	@GET
 	@Path("/delete/{id}")
@@ -138,6 +145,7 @@ public class TheamRestApi {
 
 	}
 
+	//API get edit method return theam(forum) by giving  ID for editing
 	@GET
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -158,6 +166,7 @@ public class TheamRestApi {
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
 
+	//API post edit method to edit  theam(forum) by giving  date
 	@POST
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)

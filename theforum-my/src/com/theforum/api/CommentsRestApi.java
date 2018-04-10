@@ -1,5 +1,7 @@
 package com.theforum.api;
-
+/**
+ * @author Uliana and David
+ */
 import java.net.HttpURLConnection;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,9 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 
-/**
- * @author Uliana and David
- */
+
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -41,13 +41,17 @@ import com.theforum.json.CommentWrapper;
 import com.theforum.util.DateUtils;
 import com.theforum.util.Role;
 
+//Rest API for comments tasks
 @Path("/commentslist")
 public class CommentsRestApi {
+	
+	//Tools for work with DB:
+	
 	TopicManager topicManager = new TopicManagerImpl();
 	UserManager userManager = new UserManagerImpl();
 	PostManager postManager = new PostManagerImpl();
 
-	
+	//API return list of comments(posts) by discussion(topic) ID
 	@GET
 	@Path("{id}")
 	@Produces("application/json")
@@ -66,6 +70,7 @@ public class CommentsRestApi {
 		return Response.status(200).entity(cw_list).build();
 	}
 
+	//API return list of comments(posts) by User ID
 	@Path("/getallbyuser")
 	@GET
 	@Produces("application/json")
@@ -84,6 +89,7 @@ public class CommentsRestApi {
 		return Response.status(200).entity(cw_list).build();
 	}
 
+	//API creating new comment(post) with received date
 	@POST
 	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -128,6 +134,7 @@ public class CommentsRestApi {
 
 	}
 
+	//API delete comment(post) by giving  ID
 	@DELETE
 	@Path("/delete")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -150,6 +157,7 @@ public class CommentsRestApi {
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
 
+	//API get edit method return comment(post) by giving  ID for editing
 	@GET
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -181,7 +189,8 @@ public class CommentsRestApi {
 
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
-
+	
+	//API post edit method to edit comment(post) by giving  date
 	@POST
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)

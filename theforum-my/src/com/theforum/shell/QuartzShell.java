@@ -1,5 +1,8 @@
 package com.theforum.shell;
 
+/**
+ * @author Uliana and David
+ */
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -10,14 +13,7 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import static org.quartz.SimpleScheduleBuilder.*;
 
-//import static org.quartz.JobBuilder.*;
-//import static org.quartz.TriggerBuilder.*;
-//import static org.quartz.JobBuilder.*;
-//
-//import static org.quartz.CronScheduleBuilder.*;
-//import static org.quartz.CalendarIntervalScheduleBuilder.*;
-//import static org.quartz.TriggerBuilder.*;
-//import static org.quartz.DateBuilder.*;
+
 
 public class QuartzShell {
 

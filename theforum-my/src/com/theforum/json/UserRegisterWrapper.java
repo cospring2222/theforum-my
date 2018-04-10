@@ -1,5 +1,8 @@
 package com.theforum.json;
 
+/**
+ * @author Uliana and David
+ */
 // recive json registration request model
 public class UserRegisterWrapper {
 	private String username;

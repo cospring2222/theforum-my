@@ -1,4 +1,7 @@
 package com.theforum.api;
+/**
+ * @author Uliana and David
+ */
 
 import java.net.HttpURLConnection;
 import java.time.LocalDate;
@@ -9,9 +12,6 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 
-/**
- * @author Uliana and David
- */
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -38,11 +38,14 @@ import com.theforum.json.DiscutionWrapper;
 import com.theforum.json.MessagesWrapper;
 import com.theforum.json.TheamWrapper;
 
+//Rest API for UserMessages tasks
 @Path("/usermessages")
 public class UserMessagesRestApi {
+	//Tools for work with DB:
 	UserMessageManager userMessageManager = new UserMessageManagerImpl();
 	UserManager userManager = new UserManagerImpl();
 
+	//API return list of all UserMessages
 	@Path("/getall")
 	@GET
 	@Produces("application/json")
@@ -62,6 +65,7 @@ public class UserMessagesRestApi {
 		return Response.status(200).entity(um_list).build();
 	}
 
+	//API return list of all UserMessages by user ID
 	@Path("/getallbyuser/{id}")
 	@GET
 	@Produces("application/json")
@@ -82,6 +86,7 @@ public class UserMessagesRestApi {
 		return Response.status(200).entity(mw_list).build();
 	}
 
+	//API creating new UserMessage with received date
 	@POST
 	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -105,6 +110,7 @@ public class UserMessagesRestApi {
 
 	}
 
+	//API delete UserMessage by giving  ID	
 	@DELETE
 	@Path("/delete")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -126,6 +132,7 @@ public class UserMessagesRestApi {
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
 
+	//API get edit method return UserMessage by giving  ID for editing
 	@GET
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -146,6 +153,7 @@ public class UserMessagesRestApi {
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
 
+	//API post edit method to edit UserMessage by giving  date
 	@POST
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)

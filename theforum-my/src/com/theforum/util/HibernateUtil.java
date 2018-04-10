@@ -1,15 +1,14 @@
 package com.theforum.util;
-
+/**
+ * @author Uliana and David
+ */
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-/**
- *
- * @author Uliana and David
- */
+//hibernate factory to process transactions with DB
 public class HibernateUtil {
 
 	private static HibernateUtil instance = new HibernateUtil();

@@ -1,4 +1,7 @@
 package com.theforum.dao;
+/**
+ * @author Uliana and David
+ */
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -8,12 +11,9 @@ import org.hibernate.Session;
 
 import com.theforum.util.HibernateUtil;
  
-/**
-*
- * @author Uliana and David
-*/
 
 
+//Basic Dao abstract class  to create, update, delete and find items in DB
 public abstract class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T, ID> {
  
     protected Session getSession() {

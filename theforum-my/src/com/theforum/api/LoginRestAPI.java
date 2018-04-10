@@ -1,11 +1,11 @@
 package com.theforum.api;
-
-import java.io.*;
-import java.net.*;
-
 /**
  * @author Uliana and David
  */
+import java.io.*;
+import java.net.*;
+
+
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,6 +22,7 @@ import com.theforum.entities.Users;
 import com.theforum.json.AuthenticationDetails;
 import com.theforum.json.UserWrapper;
 
+//Rest API for Login form tasks
 @Path("/login")
 public class LoginRestAPI {
 	// for tests only json clinte

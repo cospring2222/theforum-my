@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import org.hibernate.Query;
 
+//Basic Dao interface to create, update, delete and find items in DB
 public interface GenericDAO<T, ID extends Serializable> {
 
    public void save(T entity);

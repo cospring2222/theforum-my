@@ -1,12 +1,12 @@
 package com.theforum.dao;
 
+/**
+ * @author Uliana and David
+ */
 
 import com.theforum.entities.Forums;
 
  
-/**
- *
- * @author Uliana and David
- */
+
 public interface ForumDAO extends GenericDAO<Forums, Long> {
 }

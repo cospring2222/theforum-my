@@ -1,5 +1,9 @@
 package com.theforum.api;
 
+/**
+ * @author Uliana and David
+ */
+
 import java.net.HttpURLConnection;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,9 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 
-/**
- * @author Uliana and David
- */
+
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -46,12 +48,17 @@ import com.theforum.json.UserWrapper;
 import com.theforum.util.DateUtils;
 import com.theforum.util.Role;
 
+//Rest API for Discussions tasks
 @Path("/discusse")
 public class DiscutionsRestApi {
+	
+	//Tools for work with DB:
+	
 	TopicManager topicManager = new TopicManagerImpl();
 	ForumManager forumManager = new ForumManagerImpl();
 	UserManager userManager = new UserManagerImpl();
 
+	//API return list of discussions(topics) by theam(Forum) ID
 	@Path("/getallbytheam")
 	@GET
 	@Produces("application/json")
@@ -74,6 +81,7 @@ public class DiscutionsRestApi {
 		return Response.status(200).entity(dw_list).build();
 	}
 
+	//API return list of discussions(topics) by user ID
 	@Path("/getallbyuser")
 	@GET
 	@Produces("application/json")
@@ -97,7 +105,7 @@ public class DiscutionsRestApi {
 	}
 
 	
-	
+	//API creating new discussions(topic) with received date
 	@POST
 	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -106,6 +114,7 @@ public class DiscutionsRestApi {
     public Response createDiscution(DiscutionWrapperGlobal dwg) throws JSONException  {
 
 		JSONObject jsonObject = new JSONObject();
+		
 		Theam dw = dwg.getTheam(); // as disscution warper 
 		
 		if (dw.getTitle() == null || dw.getTitle() == "") {
@@ -149,6 +158,8 @@ public class DiscutionsRestApi {
 
 	}
 
+	
+	//API delete discussions(topic) by giving  ID
 	@DELETE
 	@Path("/delete")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -179,7 +190,7 @@ public class DiscutionsRestApi {
 		return Response.status(200).entity(dw_list).build();	
 
 	}
-
+	//API get edit method return discussions(topic) by giving  ID for editing
 	@GET
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -199,6 +210,7 @@ public class DiscutionsRestApi {
 		return Response.status(200).entity(cur_t).build();
 	}
 
+	//API post edit method to edit discussions(topic) by giving  date
 	@POST
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)

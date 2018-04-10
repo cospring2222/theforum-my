@@ -1,4 +1,8 @@
 package com.theforum.api;
+/**
+ * @author Uliana and David
+ */
+
 
 import java.net.HttpURLConnection;
 import java.time.LocalDate;
@@ -12,9 +16,6 @@ import java.util.stream.Collectors;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 
-/**
- * @author Uliana and David
- */
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -42,7 +43,7 @@ import com.theforum.json.DiscutionWrapper;
 import com.theforum.json.TheamWrapper;
 import com.theforum.util.AllowCrossResponse;
 
-
+//not in use - can be used , if task for old posts will called outside
 @Path("/global")
 public class GlobalRestApi {
 	PostManager postManager = new PostManagerImpl();

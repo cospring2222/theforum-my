@@ -1,5 +1,8 @@
 package com.theforum.json;
 
+/**
+ * @author Uliana and David
+ */
 // login json  model
 
 public class AuthenticationDetails {
