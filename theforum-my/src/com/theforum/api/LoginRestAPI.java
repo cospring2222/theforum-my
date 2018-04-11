@@ -106,11 +106,12 @@ public class LoginRestAPI {
 			String cur_uspass = cur_u.getUserPassword();
 			String ad_uspass = ad.getPassword();
 			
-			if (cur_uspass == ad_uspass) {
+			if (cur_uspass.equals(ad_uspass)) {
 				uw.setUsername(cur_u.getUsername());
 				uw.setId(cur_u.getUserId());
 				uw.setFirstname(cur_u.getUserFirstName());
 				uw.setLastname(cur_u.getUserSecondName());
+				uw.setRole(cur_u.getUserRole().name());
 				uw.setToken("fake-jwt-token");
 			}
 		} else {
