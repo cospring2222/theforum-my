@@ -111,6 +111,7 @@ public class LoginRestAPI {
 				uw.setId(cur_u.getUserId());
 				uw.setFirstname(cur_u.getUserFirstName());
 				uw.setLastname(cur_u.getUserSecondName());
+				uw.setRole(cur_u.getUserRole().name());
 				uw.setToken("fake-jwt-token");
 			}
 		} else {
