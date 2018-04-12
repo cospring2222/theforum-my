@@ -56,24 +56,18 @@ public class CommentsRestApi {
 	@GET
 	@Path("{id}")
 	@Produces("application/json")
-//	public Response getAllCommentsByDisscution(Object obj) throws JSONException {
 	public Response getAllCommentsByDisscution(@PathParam("id") Long disscID) throws JSONException {
+		Topics cur_topic = topicManager.findTopicById(disscID);
+		List<Posts> posts = cur_topic.getPostses();
+		// return only topics relevant date ws DiscutionWrapper array
+		List<CommentWrapper> cw_list = new ArrayList<CommentWrapper>();
+		for (Posts item : posts) {
+			CommentWrapper cw = new CommentWrapper(item.getPostId(),disscID, item.getUsers().getUsername(), item.getPostText(),new Long(0));
+			cw_list.add(cw);
+		}
+		
+		return Response.status(200).entity(cw_list).build();
 
-		JSONObject jsonObject = new JSONObject();
-
-//		Topics cur_topic = topicManager.findTopicById(disscID);
-//		List<Posts> posts = cur_topic.getPostses();
-//		// return only topics relevant date ws DiscutionWrapper array
-//		List<CommentWrapper> cw_list = new ArrayList<CommentWrapper>();
-//		for (Posts item : posts) {
-//			CommentWrapper cw = new CommentWrapper(item.getPostId(),disscID, item.getUsers().getUsername(), item.getPostText(),new Long(0));
-//			cw_list.add(cw);
-//		}
-//		
-//		DiscutionWrapperGlobalList ngwl = new DiscutionWrapperGlobalList()
-//				
-//		return Response.status(200).entity(ngwl).build();
-		return Response.status(200).entity(jsonObject).build();
 	}
 
 	//API return list of comments(posts) by User ID
