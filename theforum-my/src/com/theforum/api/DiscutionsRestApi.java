@@ -71,11 +71,9 @@ public class DiscutionsRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), ""); // last
-																										// param
-																										// will
-																										// be
-																										// body
+			
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
 			dw_list.add(dw);
 		}
 		return Response.status(200).entity(dw_list).build();
@@ -94,12 +92,8 @@ public class DiscutionsRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), ""); // last
-																										// param
-																										// will
-																										// be
-																										// body
-			dw_list.add(dw);
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
 		}
 		return Response.status(200).entity(dw_list).build();
 	}
@@ -132,8 +126,8 @@ public class DiscutionsRestApi {
 		}
 		topic.setForums(forum);
 
-		Long userID = (long) 1; /// !!! temp
-		Users user = userManager.findUserById(userID);
+//		Long userID = (long) 1; /// !!! temp
+		Users user = userManager.findByUserName(dwg.getTheam().getAuthor());
 		if (user == null) {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Parent user is not exist").build());
@@ -151,7 +145,8 @@ public class DiscutionsRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "");
+			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
 			dw_list.add(new_dw);
 		}
 		return Response.status(200).entity(dw_list).build();		
@@ -184,7 +179,9 @@ public class DiscutionsRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "");
+			
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
 			dw_list.add(dw);
 		}
 		return Response.status(200).entity(dw_list).build();	
@@ -252,7 +249,8 @@ public class DiscutionsRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "");
+			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
 			dw_list.add(new_dw);
 		}
 		return Response.status(200).entity(dw_list).build();	

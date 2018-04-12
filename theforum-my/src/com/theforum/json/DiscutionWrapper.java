@@ -4,6 +4,7 @@ package com.theforum.json;
  * @author Uliana and David
  */
 import java.util.Date;
+
 //simple discussion json model
 public class DiscutionWrapper {
 	private Long id;
@@ -11,6 +12,28 @@ public class DiscutionWrapper {
 	private String body;
 	private String author;
 	private String author_role;
+	private int watchers;
+	private int comments;
+	private Date created;
+
+	public DiscutionWrapper() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public DiscutionWrapper(Long id, String title, String body, String author, String author_role, int watchers,
+			int comments, Date created) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.body = body;
+		this.author = author;
+		this.author_role = author_role;
+		this.watchers = watchers;
+		this.comments = comments;
+		this.created = created;
+	}
+
 	public String getAuthor() {
 		return author;
 	}
@@ -49,22 +72,6 @@ public class DiscutionWrapper {
 
 	public void setCreated(Date created) {
 		this.created = created;
-	}
-
-	private int watchers;
-	private int comments;
-	private Date created;
-
-	public DiscutionWrapper(Long id, String title, String body) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.body = body;
-	}
-
-	public DiscutionWrapper() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {

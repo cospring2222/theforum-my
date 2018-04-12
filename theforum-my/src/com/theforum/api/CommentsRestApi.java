@@ -38,6 +38,7 @@ import com.theforum.entities.Posts;
 import com.theforum.entities.Topics;
 import com.theforum.entities.Users;
 import com.theforum.json.CommentWrapper;
+import com.theforum.json.DiscutionWrapperGlobalList;
 import com.theforum.util.DateUtils;
 import com.theforum.util.Role;
 
@@ -55,19 +56,24 @@ public class CommentsRestApi {
 	@GET
 	@Path("{id}")
 	@Produces("application/json")
+//	public Response getAllCommentsByDisscution(Object obj) throws JSONException {
 	public Response getAllCommentsByDisscution(@PathParam("id") Long disscID) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 
-		Topics cur_topic = topicManager.findTopicById(disscID);
-		List<Posts> posts = cur_topic.getPostses();
-		// return only topics relevant date ws DiscutionWrapper array
-		List<CommentWrapper> cw_list = new ArrayList<CommentWrapper>();
-		for (Posts item : posts) {
-			CommentWrapper cw = new CommentWrapper(item.getPostId(),disscID, item.getUsers().getUsername(), item.getPostText(),new Long(0));
-			cw_list.add(cw);
-		}
-		return Response.status(200).entity(cw_list).build();
+//		Topics cur_topic = topicManager.findTopicById(disscID);
+//		List<Posts> posts = cur_topic.getPostses();
+//		// return only topics relevant date ws DiscutionWrapper array
+//		List<CommentWrapper> cw_list = new ArrayList<CommentWrapper>();
+//		for (Posts item : posts) {
+//			CommentWrapper cw = new CommentWrapper(item.getPostId(),disscID, item.getUsers().getUsername(), item.getPostText(),new Long(0));
+//			cw_list.add(cw);
+//		}
+//		
+//		DiscutionWrapperGlobalList ngwl = new DiscutionWrapperGlobalList()
+//				
+//		return Response.status(200).entity(ngwl).build();
+		return Response.status(200).entity(jsonObject).build();
 	}
 
 	//API return list of comments(posts) by User ID
@@ -86,6 +92,8 @@ public class CommentsRestApi {
 			CommentWrapper cw = new CommentWrapper(item.getPostId(),item.getTopics().getTopicId(), item.getUsers().getUsername(), item.getPostText(),new Long(0));
 			cw_list.add(cw);
 		}
+		
+		
 		return Response.status(200).entity(cw_list).build();
 	}
 
@@ -95,7 +103,7 @@ public class CommentsRestApi {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
 	public Response createPost(CommentWrapper cw)throws JSONException {
-	//public Response createPost(Object cw)throws JSONException {
+	
 		JSONObject jsonObject = new JSONObject();
 
 
@@ -115,10 +123,10 @@ public class CommentsRestApi {
 		post.setTopics(topic);
 		// set forum parent too?
 
-//		Users user = userManager.findByUserName(cw.getAuthor());
+		Users user = userManager.findByUserName(cw.getAuthor());
 		
 		
-		Users user = userManager.findUserById(new Long(1));
+		//Users user = userManager.findUserById(new Long(1));
 		if (user == null) {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Parent user is not exist").build());
