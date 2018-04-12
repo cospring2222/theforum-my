@@ -4,7 +4,8 @@ package com.theforum.util;
  * @author Uliana and David
  */
 import javax.ws.rs.core.Response;
-//one of ways to resolve cors (Access-Control-Allow-Origin error from differents urls) not in use now , used othe configuration in WEB.XML
+//not in use now 
+//one of ways to resolve cors (Access-Control-Allow-Origin error from differents urls) , used other configuration in WEB.XML
 public class AllowCrossResponse {
 	public static Response ResponseCors(int status, Object entity) {
 		// TODO Auto-generated method stub
