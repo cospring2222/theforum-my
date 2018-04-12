@@ -47,7 +47,7 @@ import com.theforum.util.AllowCrossResponse;
 @Path("/global")
 public class GlobalRestApi {
 	PostManager postManager = new PostManagerImpl();
-	//test only
+
 	@GET
 	@Produces("application/json")
 	public Response getAllTheams() throws JSONException {

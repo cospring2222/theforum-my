@@ -5,12 +5,12 @@ package com.theforum.api;
 import java.io.*;
 import java.net.*;
 
-import javax.ws.rs.Consumes;
+
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.json.JSONException;
@@ -92,7 +92,6 @@ public class LoginRestAPI {
 	//login checking user and pass
 	@Path("/authenticate")
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
 	public Response authenticate(AuthenticationDetails ad) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
@@ -107,12 +106,11 @@ public class LoginRestAPI {
 			String cur_uspass = cur_u.getUserPassword();
 			String ad_uspass = ad.getPassword();
 			
-			if (cur_uspass.equals(ad_uspass)) {
+			if (cur_uspass == ad_uspass) {
 				uw.setUsername(cur_u.getUsername());
 				uw.setId(cur_u.getUserId());
 				uw.setFirstname(cur_u.getUserFirstName());
 				uw.setLastname(cur_u.getUserSecondName());
-				uw.setRole(cur_u.getUserRole().name());
 				uw.setToken("fake-jwt-token");
 			}
 		} else {

@@ -43,6 +43,49 @@ public class UsersRestApi {
 	//Tools for work with DB:
 	UserManager userManager = new UserManagerImpl();
 
+	//API return list of all Users
+	@Path("/list/all")
+	@GET
+	@Produces("application/json")
+	public Response getAllUsers() throws JSONException {
+
+		JSONObject jsonObject = new JSONObject();
+
+		List<Users> users = userManager.loadAllUsers();
+
+		List<UserWrapper> uw_list = new ArrayList<UserWrapper>();
+		for (Users item : users) {
+			UserWrapper uw = new UserWrapper(item.getUserId(), item.getUsername(), item.getUserRole().name(),
+					item.getUserFirstName(), item.getUserSecondName(), item.getUserPassword(), "");
+			uw_list.add(uw);
+		}
+		return Response.status(200).entity(uw_list).build();
+	}
+
+	//API return list of all Users with pagination
+	@Path("/list/page")
+	@POST
+	@Produces("application/json")
+	public Response getAllUsersPagination(PaginationWrapper pgw) throws JSONException {
+
+		List<Users> users = userManager.loadAllUsers();
+
+		List<UserWrapper> uw_list = new ArrayList<UserWrapper>();
+		int counter = 0;
+		for (Users item : users) {
+			counter++;
+			if (pgw.getPageIndex() * pgw.getPageSize() <= counter
+					&& counter < (pgw.getPageIndex() + 1) * pgw.getPageSize()) 
+			{
+				UserWrapper uw = new UserWrapper(item.getUserId(), item.getUsername(), item.getUserRole().name(),
+						item.getUserFirstName(), item.getUserSecondName(), item.getUserPassword(), "");
+				uw_list.add(uw);
+			}
+		}
+
+		return Response.status(200).entity(uw_list).build();
+	}
+
 	//API creating new User with received date from registration form
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -87,49 +130,6 @@ public class UsersRestApi {
 
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
-	
-	//API return list of all Users
-	@Path("/list/all")
-	@GET
-	@Produces("application/json")
-	public Response getAllUsers() throws JSONException {
-
-		List<Users> users = userManager.loadAllUsers();
-
-		List<UserWrapper> uw_list = new ArrayList<UserWrapper>();
-		for (Users item : users) {
-			UserWrapper uw = new UserWrapper(item.getUserId(), item.getUsername(), item.getUserRole().name(),
-					item.getUserFirstName(), item.getUserSecondName(), item.getUserPassword(), "");
-			uw_list.add(uw);
-		}
-		return Response.status(200).entity(uw_list).build();
-	}
-
-	//API return list of all Users with pagination
-	@Path("/list/page")
-	@POST
-	@Produces("application/json")
-	public Response getAllUsersPagination(PaginationWrapper pgw) throws JSONException {
-
-		List<Users> users = userManager.loadAllUsers();
-
-		List<UserWrapper> uw_list = new ArrayList<UserWrapper>();
-		int counter = 0;
-		for (Users item : users) {
-			counter++;
-			if (pgw.getPageIndex() * pgw.getPageSize() <= counter
-					&& counter < (pgw.getPageIndex() + 1) * pgw.getPageSize()) 
-			{
-				UserWrapper uw = new UserWrapper(item.getUserId(), item.getUsername(), item.getUserRole().name(),
-						item.getUserFirstName(), item.getUserSecondName(), item.getUserPassword(), "");
-				uw_list.add(uw);
-			}
-		}
-
-		return Response.status(200).entity(uw_list).build();
-	}
-
-
 
 	//API delete User by giving  ID
 	@DELETE

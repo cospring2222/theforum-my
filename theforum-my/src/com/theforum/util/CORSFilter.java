@@ -7,7 +7,7 @@ package com.theforum.util;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerResponse;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
-//one of ways to resolve cors (Access-Control-Allow-Origin error from differents urls) configured  in WEB.XML
+//one of ways to resolve cors (Access-Control-Allow-Origin error from differents urls) not in use now , used othe configuration in WEB.XML
 public class CORSFilter implements ContainerResponseFilter {
 
     @Override

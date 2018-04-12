@@ -14,7 +14,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import static org.quartz.SimpleScheduleBuilder.*;
 
 
-//Processd on start task that  runing shelldured each time period that configured before
+
 public class QuartzShell {
 
 	public static void start() {
@@ -24,11 +24,13 @@ public class QuartzShell {
 
     		// define the job and tie it to our HelloJob class
     		JobDetail job = JobBuilder.newJob(DeletePosts.class).withIdentity("job1", "group1").build();
-    		
-    		//period (once a day 17:00)
-    		CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 17 * * ?");
 
-    		// Trigger the job to run now, and then repeat every scheduleBuilder period (once a day 17:00)	
+    		CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 17 * * ?");
+    		// Trigger the job to run now, and then repeat every 40 seconds
+//    		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").startNow()
+//    				.withSchedule(simpleSchedule().withIntervalInSeconds(40).repeatForever()).build();
+
+    		
     		  Trigger trigger = TriggerBuilder
     				    .newTrigger()
     				    .withSchedule(scheduleBuilder)

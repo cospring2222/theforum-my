@@ -25,7 +25,7 @@ public class DeletePosts implements Job {
 	private static volatile DeletePosts instance;
 	PostManager postManager = new PostManagerImpl();
 	
-	int postLiveTimeDays=30;
+	int postLiveTimeDays=2;
 	
 	public static DeletePosts getInstance() {
 		DeletePosts deletePosts = instance;
