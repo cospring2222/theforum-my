@@ -69,6 +69,7 @@ public class TheamRestApi {
 		JSONObject jsonObject = new JSONObject();
 
 		Forums cur_forum = forumManager.findForumById(theamID);
+		
 		List<Topics> topics = cur_forum.getTopicses();
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();

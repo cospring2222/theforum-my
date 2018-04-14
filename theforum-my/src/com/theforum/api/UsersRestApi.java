@@ -4,16 +4,11 @@ package com.theforum.api;
  */
 
 import java.net.HttpURLConnection;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-
-
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,10 +23,7 @@ import org.json.JSONObject;
 
 import com.theforum.dao.UserManager;
 import com.theforum.dao.UserManagerImpl;
-import com.theforum.entities.Forums;
-import com.theforum.entities.Topics;
 import com.theforum.entities.Users;
-import com.theforum.json.DiscutionWrapper;
 import com.theforum.json.PaginationWrapper;
 import com.theforum.json.UserRegisterWrapper;
 import com.theforum.json.UserWrapper;
@@ -81,12 +73,18 @@ public class UsersRestApi {
 		u.setUserSecondName(uw.getLastName());
 		u.setUsername(uw.getUsername());
 		u.setUserPassword(uw.getPassword());
+		u.setAvator(uw.getAvator());
 		// u.setUserEmail(uw.getEmail());
 
 		userManager.saveOrUpdateUser(u);
 
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
+
+	
+	
+	
+
 	
 	//API return list of all Users
 	@Path("/list/all")

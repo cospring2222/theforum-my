@@ -9,6 +9,7 @@ public class UserRegisterWrapper {
 	private String firstName;
 	private String lastName;
 	private String password;
+	private String avator;
 	public UserRegisterWrapper() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -43,6 +44,12 @@ public class UserRegisterWrapper {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getAvator() {
+		return avator;
+	}
+	public void setAvator(String avator) {
+		this.avator = avator;
 	}
 	
 	

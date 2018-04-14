@@ -12,6 +12,7 @@ public class UserWrapper {
 	private String firstname;
 	private String lastname;
 	private String password;
+	private String avator;
 	private String token;
 	
 	
@@ -97,6 +98,14 @@ public class UserWrapper {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public String getAvator() {
+		return avator;
+	}
+
+	public void setAvator(String avator) {
+		this.avator = avator;
 	}	
 	
 }

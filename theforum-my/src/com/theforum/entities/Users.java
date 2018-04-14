@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -71,6 +72,14 @@ public class Users implements java.io.Serializable {
 	@Column(name = "user_second_name")
 	private String userSecondName;
 	
+	@Column(name = "avator")
+	@Lob
+	private String avator;
+	
+	
+	
+	
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "usersByUsermsgsToUserid")
 	private List<UserMessages> userMessgesesForUsermsgsToUserid = new ArrayList<UserMessages>(0);
 	
@@ -249,6 +258,13 @@ public class Users implements java.io.Serializable {
 
 	public void setPostses(List<Posts> postses) {
 		this.postses = postses;
+	}
+	public String getAvator() {
+		return avator;
+	}
+
+	public void setAvator(String avator) {
+		this.avator = avator;
 	}
 
 }

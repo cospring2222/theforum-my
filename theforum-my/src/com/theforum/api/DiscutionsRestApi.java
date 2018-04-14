@@ -74,6 +74,7 @@ public class DiscutionsRestApi {
 			
 			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
 					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
+			dw.setBody(item.getTopicBody());
 			dw_list.add(dw);
 		}
 		return Response.status(200).entity(dw_list).build();
