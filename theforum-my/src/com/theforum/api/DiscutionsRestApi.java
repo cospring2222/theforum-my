@@ -33,11 +33,14 @@ import org.json.JSONObject;
 
 import com.theforum.dao.ForumManager;
 import com.theforum.dao.ForumManagerImpl;
+import com.theforum.dao.PostManager;
+import com.theforum.dao.PostManagerImpl;
 import com.theforum.dao.TopicManager;
 import com.theforum.dao.TopicManagerImpl;
 import com.theforum.dao.UserManager;
 import com.theforum.dao.UserManagerImpl;
 import com.theforum.entities.Forums;
+import com.theforum.entities.Posts;
 import com.theforum.entities.Topics;
 import com.theforum.entities.Users;
 import com.theforum.json.DiscutionWrapper;
@@ -53,7 +56,7 @@ import com.theforum.util.Role;
 public class DiscutionsRestApi {
 	
 	//Tools for work with DB:
-	
+	PostManager postManager = new PostManagerImpl();
 	TopicManager topicManager = new TopicManagerImpl();
 	ForumManager forumManager = new ForumManagerImpl();
 	UserManager userManager = new UserManagerImpl();
@@ -156,15 +159,17 @@ public class DiscutionsRestApi {
 
 	
 	//API delete discussions(topic) by giving  ID
-	@DELETE
-	@Path("/delete")
+//	@DELETE
+	@GET
+	@Path("/delete/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	public Response delete(@QueryParam("disscID") Long disscID) throws JSONException {
+	public Response delete(@PathParam("id") Long disscID) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 
 		// Long userID = 1;
+		
 		Topics cur_t = topicManager.findTopicById(disscID);
 		if (cur_t == null) {
 			jsonObject.put("status", "failed");
@@ -173,9 +178,19 @@ public class DiscutionsRestApi {
 			return Response.status(400).entity(jsonObject.toString()).build();
 		} 
 		
+		Long cur_forum_id = cur_t.getForums().getForumId(); //parent forum id
+		
+		 //all comments for current discussion delete too
+    	List<Posts> tp= cur_t.getPostses();
+    	
+    	for (Posts post : tp) {  		
+    		postManager.deletePost(post);
+		}
+    	//now delete discussion
 		topicManager.deleteTopic(cur_t);
 		
-		Forums cur_forum = cur_t.getForums();
+		//find updated list of discussions by parent forum id
+		Forums cur_forum = forumManager.findForumById(cur_forum_id); //parent forum
 		List<Topics> topics = cur_forum.getTopicses();
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();

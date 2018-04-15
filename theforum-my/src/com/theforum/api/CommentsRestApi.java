@@ -137,25 +137,26 @@ public class CommentsRestApi {
 	}
 
 	//API delete comment(post) by giving  ID
-	@DELETE
-	@Path("/delete")
+//	@DELETE
+	@GET
+	@Path("/delete/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	public Response delete(@QueryParam("commentID") Long commentID) throws JSONException {
+	public Response delete(@PathParam("id") Long commentID) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 
 		// Long userID = 1;
 		Posts cur_post = postManager.findPostById(commentID);
-		if (cur_post != null) {
-			postManager.deletePost(cur_post);
+		if (cur_post == null) {
 
-		} else {
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Post is not exists.");
 
 		}
-
+		
+		postManager.deletePost(cur_post);
+		
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
 

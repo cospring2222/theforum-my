@@ -1,4 +1,5 @@
 package com.theforum.api;
+
 /**
  * @author Uliana and David
  */
@@ -10,8 +11,6 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-
-
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -29,7 +28,12 @@ import org.json.JSONObject;
 
 import com.theforum.dao.ForumManager;
 import com.theforum.dao.ForumManagerImpl;
+import com.theforum.dao.PostManager;
+import com.theforum.dao.PostManagerImpl;
+import com.theforum.dao.TopicManager;
+import com.theforum.dao.TopicManagerImpl;
 import com.theforum.entities.Forums;
+import com.theforum.entities.Posts;
 import com.theforum.entities.Topics;
 import com.theforum.json.DiscutionWrapper;
 import com.theforum.json.TheamWrapper;
@@ -38,10 +42,12 @@ import com.theforum.util.AllowCrossResponse;
 //Rest API for Theam(Forum) tasks
 @Path("/theamslist")
 public class TheamRestApi {
-	//Tools for work with DB:
+	// Tools for work with DB:
+	PostManager postManager = new PostManagerImpl();
 	ForumManager forumManager = new ForumManagerImpl();
-
-	//API return list of all theams (forums)
+	TopicManager topicManager = new TopicManagerImpl();
+	
+	// API return list of all theams (forums)
 	@GET
 	@Produces("application/json")
 	public Response getAllTheams() throws JSONException {
@@ -61,7 +67,7 @@ public class TheamRestApi {
 		return Response.status(200).entity(tw_list).build();
 	}
 
-	//API return list of all disscusions(topics) by theam (forum) ID
+	// API return list of all disscusions(topics) by theam (forum) ID
 	@GET
 	@Path("{id}")
 	@Produces("application/json")
@@ -69,13 +75,13 @@ public class TheamRestApi {
 		JSONObject jsonObject = new JSONObject();
 
 		Forums cur_forum = forumManager.findForumById(theamID);
-		
+
 		List<Topics> topics = cur_forum.getTopicses();
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
 			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
+					item.getUsers().getUsername(), item.getUsers().getUserRole().name(), 0, 0, item.getTopicDate());
 			dw_list.add(dw);
 		}
 		// return Response.status(200).entity(dw_list).build();
@@ -83,7 +89,7 @@ public class TheamRestApi {
 		return Response.status(200).entity(dw_list).build();
 	}
 
-	//API creating new theam(forum) with received date
+	// API creating new theam(forum) with received date
 	@POST
 	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -114,8 +120,7 @@ public class TheamRestApi {
 		return Response.status(200).entity(tw_list).build();
 	}
 
-	
-	//API delete theam(forum) by giving  ID
+	// API delete theam(forum) by giving ID
 	// @DELETE
 	@GET
 	@Path("/delete/{id}")
@@ -126,14 +131,24 @@ public class TheamRestApi {
 		JSONObject jsonObject = new JSONObject();
 
 		// Long userID = 1;
-		Forums cur_t = forumManager.findForumById(theamID);
-		if (cur_t != null) {
-			forumManager.deleteForum(cur_t);
-		} else {
+		Forums cur_f = forumManager.findForumById(theamID);
+		if (cur_f == null) {
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Forum is not exists.");
 			return Response.status(400).entity(jsonObject).build();
 		}
+		List<Topics> forum_discussiond = cur_f.getTopicses();
+		for (Topics cur_t : forum_discussiond) {
+			List<Posts> tp = cur_t.getPostses();
+
+			for (Posts post : tp) {
+				postManager.deletePost(post);
+			}
+			// now delete discussion
+			topicManager.deleteTopic(cur_t);
+		}
+
+		forumManager.deleteForum(cur_f);
 
 		List<Forums> forums = forumManager.loadAllForums();
 		List<TheamWrapper> tw_list = new ArrayList<TheamWrapper>();
@@ -142,12 +157,11 @@ public class TheamRestApi {
 					item.getForumPic()));
 		}
 
-		return Response.status(200).entity(tw_list)
-				.build();
+		return Response.status(200).entity(tw_list).build();
 
 	}
 
-	//API get edit method return theam(forum) by giving  ID for editing
+	// API get edit method return theam(forum) by giving ID for editing
 	@GET
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -168,7 +182,7 @@ public class TheamRestApi {
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
 
-	//API post edit method to edit  theam(forum) by giving  date
+	// API post edit method to edit theam(forum) by giving date
 	@POST
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)

@@ -73,6 +73,7 @@ public class TopicManagerImpl implements TopicManager {
             HibernateUtil.beginTransaction();
             topicDAO.delete(topic);
             HibernateUtil.commitTransaction();
+            System.out.println("Topic deleted");
         } catch (HibernateException ex) {
             System.out.println("Error: can't delete topic");
             HibernateUtil.rollbackTransaction();
