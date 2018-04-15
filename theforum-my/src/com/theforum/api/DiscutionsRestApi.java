@@ -75,7 +75,7 @@ public class DiscutionsRestApi {
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
 			
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
 					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
 			dw.setBody(item.getTopicBody());
 			dw_list.add(dw);
@@ -96,7 +96,7 @@ public class DiscutionsRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
 					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
 		}
 		return Response.status(200).entity(dw_list).build();
@@ -130,7 +130,6 @@ public class DiscutionsRestApi {
 		}
 		topic.setForums(forum);
 
-//		Long userID = (long) 1; /// !!! temp
 		Users user = userManager.findByUserName(dwg.getTheam().getAuthor());
 		if (user == null) {
 			throw new WebApplicationException(
@@ -149,7 +148,7 @@ public class DiscutionsRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), item.getTopicBody(),
 					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
 			dw_list.add(new_dw);
 		}
@@ -196,7 +195,7 @@ public class DiscutionsRestApi {
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
 			
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
 					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
 			dw_list.add(dw);
 		}
@@ -265,7 +264,7 @@ public class DiscutionsRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
 					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
 			dw_list.add(new_dw);
 		}

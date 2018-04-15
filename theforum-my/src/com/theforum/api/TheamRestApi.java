@@ -80,7 +80,7 @@ public class TheamRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), "",
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
 					item.getUsers().getUsername(), item.getUsers().getUserRole().name(), 0, 0, item.getTopicDate());
 			dw_list.add(dw);
 		}
