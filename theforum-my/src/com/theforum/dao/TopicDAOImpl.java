@@ -21,5 +21,12 @@ public class TopicDAOImpl extends GenericDAOImpl<Topics, Long> implements TopicD
 
     }
 
+	@Override
+	public void increaseWatcherCounter(Long topicId) {
+		String hql = "Update Topics f set f.topicWatcherNumber=(f.topicWatcherNumber + 1) where f.topicId =:topicId";;
+        Query query = HibernateUtil.getSession().createQuery(hql).setParameter("topicId", topicId);
+        int result = query.executeUpdate();		
+	}
+
 }
 

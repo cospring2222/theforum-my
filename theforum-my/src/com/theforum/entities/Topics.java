@@ -36,7 +36,8 @@ public class Topics implements java.io.Serializable {
 	private String topicSubject;
 	private String topicBody;
 	private List<Posts> postses = new ArrayList<Posts>(0);
-
+	private int topicWatcherNumber;
+	
 	public Topics() {
 		setTopicDate(DateUtils.parseDate(LocalDate.now().toString()));
 	}
@@ -54,15 +55,7 @@ public class Topics implements java.io.Serializable {
 		this.topicBody =topicBody;
 		this.postses = postses;
 	}
-//
-//	public Topics(long topicId, Forums forums, Users users, Date topicDate, String topicSubject, List<Posts> postses) {
-//		this.topicId = topicId;
-//		this.forums = forums;
-//		this.users = users;
-//		this.topicDate = topicDate;
-//		this.topicSubject = topicSubject;
-//		this.postses = postses;
-//	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "topic_id", unique = true, nullable = false)
@@ -129,5 +122,15 @@ public class Topics implements java.io.Serializable {
 	public void setPostses(List<Posts> postses) {
 		this.postses = postses;
 	}
+	
+	@Column(name = "topic_watcher_number")
+	public int getTopicWatcherNumber() {
+		return topicWatcherNumber;
+	}
+	
+	public void setTopicWatcherNumber(int topicWatcherNumber) {
+		this.topicWatcherNumber = topicWatcherNumber;
+	}
 
+	
 }

@@ -2,10 +2,13 @@ package com.theforum.json;
 
 import java.util.Date;
 
+import javax.ws.rs.Path;
+
 /**
  * @author Uliana and David
  */
-//json Discussion(Topic)  model
+//json Discussion(Topic)  model for using in DiscutionWrapperGlobal, for client side in new discussion creation
+//DiscutionsRestApi.java -> Post @Path("/add") createDiscution
 public class Theam {
 	
 	private Long id;

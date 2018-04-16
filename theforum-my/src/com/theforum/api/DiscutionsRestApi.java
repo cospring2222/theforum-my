@@ -102,6 +102,24 @@ public class DiscutionsRestApi {
 		return Response.status(200).entity(dw_list).build();
 	}
 
+	@POST
+	@Path("/theamwatcher/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces("application/json")
+	public Response updateTeamwatherCounterByTheamID(@PathParam("id") Long discID) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		Topics disc= topicManager.findTopicById(discID);//find discussion
+		//chek if not null
+		if (disc == null) {
+					return Response.status(400).entity("Discussion is not exist").build();
+//					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Discussion is not exist").build();
+
+		}	
+		topicManager.increaseWatcherCounter(disc.getTopicId());
+		
+		
+		return Response.status(200).entity("Discussion counter increased").build();
+	}
 	
 	//API creating new discussions(topic) with received date
 	@POST

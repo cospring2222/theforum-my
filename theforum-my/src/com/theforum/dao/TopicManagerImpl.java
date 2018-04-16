@@ -80,4 +80,17 @@ public class TopicManagerImpl implements TopicManager {
         }
     }
 
+	@Override
+	public void increaseWatcherCounter(Long id) {
+		try {
+            HibernateUtil.beginTransaction();
+            topicDAO.increaseWatcherCounter(id);
+            HibernateUtil.commitTransaction();
+        } catch (HibernateException ex) {
+            System.out.println("Error in topic counter increasing");
+            HibernateUtil.rollbackTransaction();
+        }
+		
+	}
+
 }

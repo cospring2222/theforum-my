@@ -3,7 +3,9 @@ package com.theforum.json;
 /**
  * @author Uliana and David
  */
-//global discussion json model
+//global discussion json model for client side in new discussion creation
+//DiscutionsRestApi.java -> Post @Path("/add") createDiscution
+
 public class DiscutionWrapperGlobal {
 	Theam theam;
 	Long theamid;

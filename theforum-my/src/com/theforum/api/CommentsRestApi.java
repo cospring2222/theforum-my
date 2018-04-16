@@ -36,7 +36,6 @@ import com.theforum.entities.Posts;
 import com.theforum.entities.Topics;
 import com.theforum.entities.Users;
 import com.theforum.json.CommentWrapper;
-import com.theforum.json.DiscutionWrapperGlobalList;
 import com.theforum.util.DateUtils;
 import com.theforum.util.Role;
 

@@ -5,7 +5,7 @@ package com.theforum.json;
  */
 import java.util.Date;
 
-//simple discussion json model
+//simple discussion json model for presentation on teamfulllist
 public class DiscutionWrapper {
 	private Long id;
 	private String title;
