@@ -18,5 +18,8 @@ public interface UserManager {
     public Users findUserById(Long id);
  
     public void deleteUser(Users u);
-
+    
+    public void increaseCommentCounter(Long id);
+    
+    public void decreaseCommentCounter(Long id);
 }

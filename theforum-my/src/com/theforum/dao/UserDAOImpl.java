@@ -11,11 +11,28 @@ import org.hibernate.Query;
 public class UserDAOImpl extends GenericDAOImpl<Users, Long> implements UserDAO {
     public Users findByName(String username) {
         Users u = null;
-        String sql = "SELECT p FROM Users p WHERE p.username = :username";
-        Query query = HibernateUtil.getSession().createQuery(sql).setParameter("username", username);
+        String hql = "SELECT p FROM Users p WHERE p.username = :username";
+        Query query = HibernateUtil.getSession().createQuery(hql).setParameter("username", username);
         u = findOne(query);
         return u;
     }
+
+	@Override
+	public void increaseCommentCounter(Long userId) {
+		String hql = "Update Users f set f.userCommentNumber=(f.userCommentNumber + 1) where f.userId =:userId";;
+        Query query = HibernateUtil.getSession().createQuery(hql).setParameter("userId", userId);
+        int result = query.executeUpdate();		
+	}
+	
+	@Override
+	public void decreaseCommentCounter(Long userId) {
+        String hql = "Update Users f set f.userCommentNumber=(f.userCommentNumber - 1) where f.userId =:userId";;
+        Query query = HibernateUtil.getSession().createQuery(hql).setParameter("userId", userId);
+        int result = query.executeUpdate();	
+		
+	}
+
+
 
 }
 

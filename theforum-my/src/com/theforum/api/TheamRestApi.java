@@ -32,9 +32,12 @@ import com.theforum.dao.PostManager;
 import com.theforum.dao.PostManagerImpl;
 import com.theforum.dao.TopicManager;
 import com.theforum.dao.TopicManagerImpl;
+import com.theforum.dao.UserManager;
+import com.theforum.dao.UserManagerImpl;
 import com.theforum.entities.Forums;
 import com.theforum.entities.Posts;
 import com.theforum.entities.Topics;
+import com.theforum.entities.Users;
 import com.theforum.json.DiscutionWrapper;
 import com.theforum.json.TheamWrapper;
 import com.theforum.util.AllowCrossResponse;
@@ -46,6 +49,7 @@ public class TheamRestApi {
 	PostManager postManager = new PostManagerImpl();
 	ForumManager forumManager = new ForumManagerImpl();
 	TopicManager topicManager = new TopicManagerImpl();
+	UserManager userManager = new UserManagerImpl();
 	
 	// API return list of all theams (forums)
 	@GET
@@ -61,8 +65,6 @@ public class TheamRestApi {
 					item.getForumPic()));
 
 		}
-		// return Response.status(200).entity(tw_list).build();
-		// return AllowCrossResponse.ResponseCors(200, tw_list);
 
 		return Response.status(200).entity(tw_list).build();
 	}
@@ -84,8 +86,7 @@ public class TheamRestApi {
 					item.getUsers().getUsername(), item.getUsers().getUserRole().name(), 0, 0, item.getTopicDate());
 			dw_list.add(dw);
 		}
-		// return Response.status(200).entity(dw_list).build();
-		// return AllowCrossResponse.ResponseCors(200, dw_list);
+
 		return Response.status(200).entity(dw_list).build();
 	}
 
@@ -130,19 +131,28 @@ public class TheamRestApi {
 
 		JSONObject jsonObject = new JSONObject();
 
-		// Long userID = 1;
+		//find forum by id
 		Forums cur_f = forumManager.findForumById(theamID);
 		if (cur_f == null) {
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Forum is not exists.");
 			return Response.status(400).entity(jsonObject).build();
 		}
+		//find all disscusions of the forum for tree dell
 		List<Topics> forum_discussiond = cur_f.getTopicses();
 		for (Topics cur_t : forum_discussiond) {
+			//find all comments of the forum for tree dell
 			List<Posts> tp = cur_t.getPostses();
 
 			for (Posts post : tp) {
 				postManager.deletePost(post);
+				Users user = post.getUsers();
+				
+				// update user posts counter 
+				if (user != null) {
+					userManager.decreaseCommentCounter(user.getUserId());
+				}
+
 			}
 			// now delete discussion
 			topicManager.deleteTopic(cur_t);
@@ -150,8 +160,10 @@ public class TheamRestApi {
 
 		forumManager.deleteForum(cur_f);
 
-		List<Forums> forums = forumManager.loadAllForums();
+		//load updated forums list
+		List<Forums> forums = forumManager.loadAllForums();		
 		List<TheamWrapper> tw_list = new ArrayList<TheamWrapper>();
+		//convert list from entity object to warper , that used on client side:
 		for (Forums item : forums) {
 			tw_list.add(new TheamWrapper(item.getForumId(), item.getForumName(), item.getForumDescription(),
 					item.getForumPic()));

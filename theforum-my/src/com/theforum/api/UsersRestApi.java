@@ -46,11 +46,7 @@ public class UsersRestApi {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("username  is mandatory").build());
 		}
-		// if (uw.getEmail() == null) {
-		// throw new WebApplicationException(
-		// Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("email is
-		// mandatory").build());
-		// }
+
 		if (uw.getPassword() == null) {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("password  is mandatory").build());
@@ -74,16 +70,11 @@ public class UsersRestApi {
 		u.setUsername(uw.getUsername());
 		u.setUserPassword(uw.getPassword());
 		u.setAvator(uw.getAvator());
-		// u.setUserEmail(uw.getEmail());
 
 		userManager.saveOrUpdateUser(u);
 
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
-
-	
-	
-	
 
 	
 	//API return list of all Users
@@ -211,7 +202,7 @@ public class UsersRestApi {
 		// check if new username is alredy taked
 		String prevUserName = cur_u.getUsername();
 		String newUserName = uw.getUsername();
-		if (newUserName != prevUserName) {
+		if (!newUserName.equals(prevUserName)) {
 			Users check_new_username_exist = userManager.findByUserName(newUserName);
 			if (check_new_username_exist != null) {
 				jsonObject.put("status", "failed");

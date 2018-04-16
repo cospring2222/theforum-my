@@ -7,8 +7,12 @@ package com.theforum.json;
 public class CommentWrapper {
 	private Long id;
 	private Long discussionid;
-	private String author;
 	private String body;
+	private String author;
+	private String author_role; 
+	private String author_join;
+	private String author_avator;
+	private String created;
 	private Long answeredid;
 	
 	public CommentWrapper() {
@@ -24,6 +28,31 @@ public class CommentWrapper {
 		this.answeredid = answeredid;
 	}
 	
+	
+	public String getAuthor_avator() {
+		return author_avator;
+	}
+	public void setAuthor_avator(String author_avator) {
+		this.author_avator = author_avator;
+	}
+	public String getAuthor_role() {
+		return author_role;
+	}
+	public void setAuthor_role(String author_role) {
+		this.author_role = author_role;
+	}
+	public String getAuthor_join() {
+		return author_join;
+	}
+	public void setAuthor_join(String author_join) {
+		this.author_join = author_join;
+	}
+	public String getCreated() {
+		return created;
+	}
+	public void setCreated(String created) {
+		this.created = created;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -59,44 +88,6 @@ public class CommentWrapper {
 	
 
 
-	
-	
-//	private Long id;
-//	private String username;
-//	private String body;
-//
-//	public CommentWrapper() {
-//		super();
-//		// TODO Auto-generated constructor stub
-//	}
-//	
-//	public CommentWrapper(Long id, String username, String body) {
-//		super();
-//		this.id = id;
-//		this.username = username;
-//		this.body = body;
-//	}
-//
-//	
-//	public Long getId() {
-//		return id;
-//	}
-//
-//	public void setId(Long id) {
-//		this.id = id;
-//	}
-//
-//	public String getUsername() {
-//		return username;
-//	}
-//
-//	public void setUsername(String username) {
-//		this.username = username;
-//	}
-//
-//	public String getBody() {
-//		return body;
-//	}
 
 }
 

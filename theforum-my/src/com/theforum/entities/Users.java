@@ -76,9 +76,9 @@ public class Users implements java.io.Serializable {
 	@Lob
 	private String avator;
 	
-	
-	
-	
+	@Column(name = "user_comment_number")
+	private int userCommentNumber;
+		
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "usersByUsermsgsToUserid")
 	private List<UserMessages> userMessgesesForUsermsgsToUserid = new ArrayList<UserMessages>(0);
@@ -266,5 +266,14 @@ public class Users implements java.io.Serializable {
 	public void setAvator(String avator) {
 		this.avator = avator;
 	}
+
+	public int getUserCommentNumber() {
+		return userCommentNumber;
+	}
+
+	public void setUserCommentNumber(int userCommentNumber) {
+		this.userCommentNumber = userCommentNumber;
+	}
+	
 
 }

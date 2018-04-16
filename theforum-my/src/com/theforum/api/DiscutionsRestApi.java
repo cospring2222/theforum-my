@@ -139,7 +139,7 @@ public class DiscutionsRestApi {
 		topic.setUsers(user);
 
 		topic.setTopicSubject(dw.getTitle());
-		topic.setTopicBody(dw.getBody());// !!! add in entity
+		topic.setTopicBody(dw.getBody());
 
 		topicManager.saveOrUpdateTopic(topic);
 

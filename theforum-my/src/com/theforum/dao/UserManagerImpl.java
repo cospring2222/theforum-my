@@ -79,4 +79,30 @@ public class UserManagerImpl implements UserManager {
         }
     }
 
+	@Override
+	public void increaseCommentCounter(Long id) {
+		try {
+            HibernateUtil.beginTransaction();
+            userDAO.increaseCommentCounter(id);
+            HibernateUtil.commitTransaction();
+        } catch (HibernateException ex) {
+            System.out.println("Error in user  counter increasing");
+            HibernateUtil.rollbackTransaction();
+        }
+		
+	}
+
+	@Override
+	public void decreaseCommentCounter(Long id) {
+		try {
+            HibernateUtil.beginTransaction();
+            userDAO.decreaseCommentCounter(id);
+            HibernateUtil.commitTransaction();
+        } catch (HibernateException ex) {
+            System.out.println("Error in user counter decreasing");
+            HibernateUtil.rollbackTransaction();
+        }
+		
+	}
+
 }
