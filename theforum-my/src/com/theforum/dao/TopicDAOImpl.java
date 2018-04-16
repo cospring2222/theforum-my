@@ -28,5 +28,19 @@ public class TopicDAOImpl extends GenericDAOImpl<Topics, Long> implements TopicD
         int result = query.executeUpdate();		
 	}
 
+	@Override
+	public void increaseCommentCounter(Long topicId) {
+		String hql = "Update Topics f set f.topicCommentNumber=(f.topicCommentNumber + 1) where f.topicId =:topicId";;
+        Query query = HibernateUtil.getSession().createQuery(hql).setParameter("topicId", topicId);
+        int result = query.executeUpdate();		
+	}
+	
+	@Override
+	public void decreaseCommentCounter(Long topicId) {
+        String hql = "Update Topics f set f.topicCommentNumber=(f.topicCommentNumber - 1) where f.topicId =:topicId";;
+        Query query = HibernateUtil.getSession().createQuery(hql).setParameter("topicId", topicId);
+        int result = query.executeUpdate();	
+		
+	}
 }
 

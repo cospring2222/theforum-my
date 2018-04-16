@@ -86,7 +86,7 @@ public class UserManagerImpl implements UserManager {
             userDAO.increaseCommentCounter(id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
-            System.out.println("Error in user  counter increasing");
+            System.out.println("Error in user comment  counter increasing");
             HibernateUtil.rollbackTransaction();
         }
 		
@@ -99,7 +99,7 @@ public class UserManagerImpl implements UserManager {
             userDAO.decreaseCommentCounter(id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
-            System.out.println("Error in user counter decreasing");
+            System.out.println("Error in user comment counter decreasing");
             HibernateUtil.rollbackTransaction();
         }
 		

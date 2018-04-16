@@ -37,6 +37,7 @@ public class Topics implements java.io.Serializable {
 	private String topicBody;
 	private List<Posts> postses = new ArrayList<Posts>(0);
 	private int topicWatcherNumber;
+	private int topicCommentNumber;
 	
 	public Topics() {
 		setTopicDate(DateUtils.parseDate(LocalDate.now().toString()));
@@ -131,6 +132,17 @@ public class Topics implements java.io.Serializable {
 	public void setTopicWatcherNumber(int topicWatcherNumber) {
 		this.topicWatcherNumber = topicWatcherNumber;
 	}
+	
+	@Column(name = "topic_comment_number")
+	public int getTopicCommentNumber() {
+		return topicCommentNumber;
+	}
 
+	public void setTopicCommentNumber(int topicCommentNumber) {
+		this.topicCommentNumber = topicCommentNumber;
+	}
+	
+
+	
 	
 }

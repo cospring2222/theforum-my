@@ -123,6 +123,8 @@ public class CommentsRestApi {
 
 		}
 		post.setTopics(topic);
+		
+		
 		// set forum parent too?
 
 		Users user = userManager.findByUserName(cw.getAuthor());
@@ -140,9 +142,13 @@ public class CommentsRestApi {
 
 		postManager.saveOrUpdatePost(post);
 
-		// user counter update
+		// user comments counter update
 		userManager.increaseCommentCounter(user.getUserId());
 
+		// topic comments counter update
+		topicManager.increaseCommentCounter(topic.getTopicId());
+		
+		
 		return Response.status(200).entity("Comment added").build();
 
 	}
@@ -166,14 +172,21 @@ public class CommentsRestApi {
 
 		}
 
-		Users user = cur_post.getUsers();
+		Users parent_user = cur_post.getUsers();
+		Topics parent_topic  = cur_post.getTopics();
+		
 		postManager.deletePost(cur_post);
 
-		// user counter update
-		if (user != null) {
-			userManager.decreaseCommentCounter(user.getUserId());
+		// user comments counter update
+		if (parent_user != null) {
+			userManager.decreaseCommentCounter(parent_user.getUserId());
 		}
-
+		
+		// topic comments counter update
+		if (parent_topic != null) {
+			topicManager.decreaseCommentCounter(parent_topic.getTopicId());	
+		}
+		
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
 

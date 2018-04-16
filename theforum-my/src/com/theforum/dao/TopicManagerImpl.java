@@ -92,5 +92,31 @@ public class TopicManagerImpl implements TopicManager {
         }
 		
 	}
+	
+	@Override
+	public void increaseCommentCounter(Long id) {
+		try {
+            HibernateUtil.beginTransaction();
+            topicDAO.increaseCommentCounter(id);
+            HibernateUtil.commitTransaction();
+        } catch (HibernateException ex) {
+            System.out.println("Error in topic comment increasing");
+            HibernateUtil.rollbackTransaction();
+        }
+		
+	}
+
+	@Override
+	public void decreaseCommentCounter(Long id) {
+		try {
+            HibernateUtil.beginTransaction();
+            topicDAO.decreaseCommentCounter(id);
+            HibernateUtil.commitTransaction();
+        } catch (HibernateException ex) {
+            System.out.println("Error in topic comment counter decreasing");
+            HibernateUtil.rollbackTransaction();
+        }
+		
+	}
 
 }

@@ -21,4 +21,8 @@ public interface TopicManager {
     public void deleteTopic(Topics topic);
 
     public void increaseWatcherCounter(Long id);
+    
+    public void increaseCommentCounter(Long id);
+    
+    public void decreaseCommentCounter(Long id);
 }
