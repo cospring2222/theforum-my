@@ -3,7 +3,7 @@ package com.theforum.util;
  * @author Uliana and David
  */
 import java.text.DateFormat;
-
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,4 +22,14 @@ public class DateUtils {
 			}  
 		    return result;
 	}
+	
+	public static String dateToMonthYearOnlyString(Date date) {
+
+	    String result ="";
+		Format formatter = new SimpleDateFormat("MM yyyy");
+		result = formatter.format(date);
+
+	    return result;
+}
+
 }

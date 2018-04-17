@@ -12,6 +12,7 @@ public class CommentWrapper {
 	private String author_role; 
 	private String author_join;
 	private String author_avator;
+	private int author_posts_number;
 	private String created;
 	private Long answeredid;
 	
@@ -82,6 +83,12 @@ public class CommentWrapper {
 	}
 	public void setAnsweredid(Long answeredid) {
 		this.answeredid = answeredid;
+	}
+	public int getAuthor_posts_number() {
+		return author_posts_number;
+	}
+	public void setAuthor_posts_number(int author_posts_number) {
+		this.author_posts_number = author_posts_number;
 	}
 
 	

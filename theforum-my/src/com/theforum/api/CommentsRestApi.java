@@ -64,9 +64,10 @@ public class CommentsRestApi {
 				return Response.status(400).entity("Error:Some post have no user ").build();
 			}
 			CommentWrapper cw = new CommentWrapper(item.getPostId(), disscID, post_user.getUsername(), item.getPostText(), new Long(0));
-			cw.setAuthor_join(post_user.getUserRegdate().toString());
+			cw.setAuthor_join(DateUtils.dateToMonthYearOnlyString(post_user.getUserRegdate()));
 			cw.setAuthor_avator(post_user.getAvator());
 			cw.setCreated(item.getPostDate().toString());
+			cw.setAuthor_posts_number(post_user.getUserCommentNumber());
 			cw_list.add(cw);
 		}
 
@@ -90,10 +91,10 @@ public class CommentsRestApi {
 			Topics cur_topic = item.getTopics();
 			CommentWrapper cw = new CommentWrapper(item.getPostId(), cur_topic.getTopicId(), cur_u.getUsername(),
 					item.getPostText(), new Long(0));
-			cw.setAuthor_join(cur_u.getUserRegdate().toString());
+			cw.setAuthor_join(DateUtils.dateToMonthYearOnlyString(cur_u.getUserRegdate()));
 			cw.setAuthor_avator(cur_u.getAvator());
 			cw.setCreated(item.getPostDate().toString());
-
+			cw.setAuthor_posts_number(cur_u.getUserCommentNumber());
 			cw_list.add(cw);
 		}
 

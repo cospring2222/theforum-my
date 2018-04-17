@@ -76,8 +76,9 @@ public class DiscutionsRestApi {
 		for (Topics item : topics) {
 			
 			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
+					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
 			dw.setBody(item.getTopicBody());
+
 			dw_list.add(dw);
 		}
 		return Response.status(200).entity(dw_list).build();
@@ -97,7 +98,7 @@ public class DiscutionsRestApi {
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
 			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
+					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber(),item.getTopicDate());
 		}
 		return Response.status(200).entity(dw_list).build();
 	}
@@ -167,7 +168,7 @@ public class DiscutionsRestApi {
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
 			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), item.getTopicBody(),
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
+					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
 			dw_list.add(new_dw);
 		}
 		return Response.status(200).entity(dw_list).build();		
@@ -214,7 +215,7 @@ public class DiscutionsRestApi {
 		for (Topics item : topics) {
 			
 			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
+					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
 			dw_list.add(dw);
 		}
 		return Response.status(200).entity(dw_list).build();	
@@ -283,7 +284,7 @@ public class DiscutionsRestApi {
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
 			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),0,0 ,item.getTopicDate());
+					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
 			dw_list.add(new_dw);
 		}
 		return Response.status(200).entity(dw_list).build();	
