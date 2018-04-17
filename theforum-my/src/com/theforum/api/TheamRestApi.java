@@ -83,7 +83,8 @@ public class TheamRestApi {
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
 			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
-					item.getUsers().getUsername(), item.getUsers().getUserRole().name(), 0, 0, item.getTopicDate());
+					item.getUsers().getUsername(), item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber(), item.getTopicDate());
+			dw.setBody(item.getTopicBody());
 			dw_list.add(dw);
 		}
 
