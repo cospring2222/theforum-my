@@ -11,7 +11,7 @@ import java.util.Locale;
 //Date convertor util
 public class DateUtils {
 	public static Date parseDate(String sdate) {
-		    DateFormat df = new SimpleDateFormat("yy-mm-dd", Locale.ENGLISH);
+		    DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 		    Date result;
 			try {
 				result = df.parse(sdate);
@@ -26,7 +26,7 @@ public class DateUtils {
 	public static String dateToMonthYearOnlyString(Date date) {
 
 	    String result ="";
-		Format formatter = new SimpleDateFormat("MM yyyy");
+		Format formatter = new SimpleDateFormat("MMM yyyy");
 		result = formatter.format(date);
 
 	    return result;

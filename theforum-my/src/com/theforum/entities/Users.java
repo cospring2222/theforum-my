@@ -97,6 +97,7 @@ public class Users implements java.io.Serializable {
 		this.deleted=false;
 		setUserRegdate(DateUtils.parseDate(LocalDate.now().toString()));
 		setUserLastvisit(DateUtils.parseDate(LocalDate.now().toString()));
+
 	}
 
 	public Users(long userId) {
