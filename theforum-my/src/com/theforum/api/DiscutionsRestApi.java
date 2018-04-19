@@ -74,7 +74,7 @@ public class DiscutionsRestApi {
 		// return only topics relevant date ws DiscutionWrapper array
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			
+
 			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
 					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
 			dw.setBody(item.getTopicBody());
@@ -82,6 +82,23 @@ public class DiscutionsRestApi {
 			dw_list.add(dw);
 		}
 		return Response.status(200).entity(dw_list).build();
+	}
+	
+	//API return list of discussions(topics) by theam(Forum) ID
+	@Path("/getbyid/{id}")
+	@GET
+	@Produces("application/json")
+	public Response getById(@PathParam("id") Long discID) throws JSONException {
+
+		JSONObject jsonObject = new JSONObject();
+
+		Topics  item= topicManager.findTopicById(discID);
+		DiscutionWrapper cur_topic= new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
+				item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
+		cur_topic.setAuthor_avator(item.getUsers().getAvator());
+		cur_topic.setBody(item.getTopicBody());
+
+		return Response.status(200).entity(cur_topic).build();
 	}
 
 	//API return list of discussions(topics) by user ID

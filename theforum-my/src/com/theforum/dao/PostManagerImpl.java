@@ -23,6 +23,8 @@ public class PostManagerImpl implements PostManager {
             allPosts = postDAO.findAll(Posts.class);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Can't load posts");
         }
         return allPosts;
@@ -35,6 +37,8 @@ public class PostManagerImpl implements PostManager {
             HibernateUtil.commitTransaction();
             System.out.println("Post created or updated sucsessffully");
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Error: Cant't create or update post.");
             HibernateUtil.rollbackTransaction();
         }
@@ -47,6 +51,8 @@ public class PostManagerImpl implements PostManager {
             p = (Posts) postDAO.findByID(Posts.class, id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Can't find post");
         }
         return p;
@@ -58,6 +64,8 @@ public class PostManagerImpl implements PostManager {
             postDAO.delete(p);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Can't delete post");
             HibernateUtil.rollbackTransaction();
         }

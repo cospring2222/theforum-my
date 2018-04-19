@@ -4,6 +4,7 @@ package com.theforum.dao;
  * @author Uliana and David
  */
 import com.theforum.entities.Topics;
+import com.theforum.entities.Users;
 import com.theforum.util.HibernateUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,6 +18,11 @@ public class TopicDAOImpl extends GenericDAOImpl<Topics, Long> implements TopicD
         String sql = "SELECT t FROM Topics t WHERE t.forums.forumId = :forumID";
         Query query = HibernateUtil.getSession().createQuery(sql).setParameter("forumID", forumID);
         topics = query.list();
+
+        //String hql = "SELECT p FROM Users p WHERE p.user_id = :id";
+        //query = HibernateUtil.getSession().createQuery(hql).setParameter("id", id);
+        //Users user = findOne(query);
+        
         return topics;
 
     }

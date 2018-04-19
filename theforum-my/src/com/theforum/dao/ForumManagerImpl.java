@@ -24,6 +24,8 @@ public class ForumManagerImpl implements ForumManager {
             allTheams = forumDAO.findAll(Forums.class);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Error: Can't load forums");
         }
         return allTheams;
@@ -36,6 +38,8 @@ public class ForumManagerImpl implements ForumManager {
             HibernateUtil.commitTransaction();
             System.out.println("Forum created or updated sucsessffully");
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Error: Cant't create or update forum.");
             HibernateUtil.rollbackTransaction();
         }
@@ -48,6 +52,8 @@ public class ForumManagerImpl implements ForumManager {
             forum = (Forums) forumDAO.findByID(Forums.class, id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Error: can't find forum");
         }
         return forum;
@@ -59,6 +65,8 @@ public class ForumManagerImpl implements ForumManager {
             forumDAO.delete(forum);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Error: can't delete forum");
             HibernateUtil.rollbackTransaction();
         }

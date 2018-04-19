@@ -107,7 +107,7 @@ public class Topics implements java.io.Serializable {
 		this.topicSubject = topicSubject;
 	}
 	
-	@Column(name = "topic_sbody")
+	@Column(name = "topic_sbody", length = 500)
 	public String getTopicBody() {
 		return this.topicBody;
 	}

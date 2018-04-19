@@ -12,6 +12,7 @@ public class DiscutionWrapper {
 	private String body;
 	private String author;
 	private String author_role;
+	private String author_avator;
 	private int watchers;
 	private int comments;
 	private Date created;
@@ -96,5 +97,13 @@ public class DiscutionWrapper {
 
 	public void setBody(String body) {
 		this.body = body;
+	}
+
+	public String getAuthor_avator() {
+		return author_avator;
+	}
+
+	public void setAuthor_avator(String author_avator) {
+		this.author_avator = author_avator;
 	}
 }

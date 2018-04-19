@@ -24,6 +24,8 @@ public class UserMessageManagerImpl implements UserMessageManager {
             allUserMessages = userMessageDAO.findAll(UserMessages.class);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Error:Can't load user messages");
         }
         return allUserMessages;
@@ -36,6 +38,8 @@ public class UserMessageManagerImpl implements UserMessageManager {
             HibernateUtil.commitTransaction();
             System.out.println("UserMessage created or updated sucsessffully");
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Error: Cant't create or update user message.");
             HibernateUtil.rollbackTransaction();
         }
@@ -48,6 +52,8 @@ public class UserMessageManagerImpl implements UserMessageManager {
             um = (UserMessages) userMessageDAO.findByID(UserMessages.class, id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Error: Cant't find user message.");
         }
         return um;
@@ -59,6 +65,8 @@ public class UserMessageManagerImpl implements UserMessageManager {
             userMessageDAO.delete(um);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
+
             System.out.println("Error: Cant't delete user message.");
             HibernateUtil.rollbackTransaction();
         }

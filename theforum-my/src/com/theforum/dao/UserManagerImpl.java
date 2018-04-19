@@ -24,6 +24,7 @@ public class UserManagerImpl implements UserManager {
             u = userDAO.findByName(username);
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
+        	ex.printStackTrace();
             System.out.println("Handle your error here");
             System.out.println("Query returned more than one results.");
         } catch (HibernateException ex) {
@@ -39,6 +40,7 @@ public class UserManagerImpl implements UserManager {
             allUsers = userDAO.findAll(Users.class);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
             System.out.println("Handle your error here");
         }
         return allUsers;
@@ -51,7 +53,8 @@ public class UserManagerImpl implements UserManager {
             HibernateUtil.commitTransaction();
             System.out.println("User created or updated sucsessffully");
         } catch (HibernateException ex) {
-            System.out.println("Error: Cant't create or update user.");
+        	ex.printStackTrace();
+        	System.out.println("Error: Cant't create or update user.");
             HibernateUtil.rollbackTransaction();
         }
     }
@@ -63,6 +66,7 @@ public class UserManagerImpl implements UserManager {
             u = (Users) userDAO.findByID(Users.class, id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
             System.out.println("Handle your error here");
         }
         return u;
@@ -74,6 +78,7 @@ public class UserManagerImpl implements UserManager {
             userDAO.delete(u);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
             System.out.println("Handle your error here");
             HibernateUtil.rollbackTransaction();
         }
@@ -86,6 +91,7 @@ public class UserManagerImpl implements UserManager {
             userDAO.increaseCommentCounter(id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
             System.out.println("Error in user comment  counter increasing");
             HibernateUtil.rollbackTransaction();
         }
@@ -99,6 +105,7 @@ public class UserManagerImpl implements UserManager {
             userDAO.decreaseCommentCounter(id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
+        	ex.printStackTrace();
             System.out.println("Error in user comment counter decreasing");
             HibernateUtil.rollbackTransaction();
         }
