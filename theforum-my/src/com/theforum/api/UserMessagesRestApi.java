@@ -84,20 +84,11 @@ public class UserMessagesRestApi {
 		
 		um_list.addAll(um_list2);
 		
-		//order list by created date:
-		
-//		Collections.sort(um_list, new Comparator<UserMessages>() {
-//		    public int compare(UserMessages o1, UserMessages o2) {
-//		    	return o1.getUsermsgsDate().compareTo(o2.getUsermsgsDate());
-//		    } 
-//		});		
-		
-//		Collections.sort(um_list, 
-//                (o1, o2) -> o1.getUsermsgsDate().compareTo(o2.getUsermsgsDate()));
-//		
+
+		//order list by created date:		
 		um_list.sort(Comparator.comparing(UserMessages::getUsermsgsDate));	
-		
-		//add both lists to one warper objects list
+
+		//add list to one warper objects list
 		List<MessagesWrapper> mw_list = new ArrayList<MessagesWrapper>();
 		for (UserMessages item : um_list) {
 			Users fromUser=item.getUsersByUsermsgsFromUserid();
@@ -106,8 +97,6 @@ public class UserMessagesRestApi {
 			mw_list.add(mw);
 		}
 
-
-		
 		return Response.status(200).entity(mw_list).build();
 	}
 
@@ -147,11 +136,12 @@ public class UserMessagesRestApi {
 	}
 
 	//API delete UserMessage by giving  ID	
-	@DELETE
-	@Path("/delete")
+//	@DELETE
+	@GET
+	@Path("/delete/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	public Response deleteTheam(@QueryParam("umID") Long umID) throws JSONException {
+	public Response deleteTheam(@PathParam("id") Long umID) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 

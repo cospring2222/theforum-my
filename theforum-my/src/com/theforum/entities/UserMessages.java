@@ -35,7 +35,8 @@ public class UserMessages implements java.io.Serializable {
 	private String usermsgsText;
 
 	public UserMessages() {
-		setUsermsgsDate(DateUtils.parseDate(LocalDate.now().toString()));
+//		setUsermsgsDate(DateUtils.parseDate(LocalDate.now().toString()));
+		setUsermsgsDate(new Date());
 	}
 
 	public UserMessages(long id) {
