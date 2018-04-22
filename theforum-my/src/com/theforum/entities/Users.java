@@ -19,6 +19,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.theforum.util.DateUtils;
 import com.theforum.util.Role;
 
@@ -81,12 +84,14 @@ public class Users implements java.io.Serializable {
 		
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "usersByUsermsgsToUserid")
+	@Fetch (FetchMode.SELECT)
 	private List<UserMessages> userMessgesesForUsermsgsToUserid = new ArrayList<UserMessages>(0);
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "users")
 	private List<Topics> topicses = new ArrayList<Topics>(0);
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "usersByUsermsgsFromUserid")
+	@Fetch (FetchMode.SELECT)
 	private List<UserMessages> userMessgesesForUsermsgsFromUserid = new ArrayList<UserMessages>(0);
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "users")

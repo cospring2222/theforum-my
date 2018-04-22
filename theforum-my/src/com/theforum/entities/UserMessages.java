@@ -15,6 +15,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.theforum.util.DateUtils;
 
 /**
@@ -62,6 +65,7 @@ public class UserMessages implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "usermsgs_to_userid")
+	@Fetch (FetchMode.SELECT)
 	public Users getUsersByUsermsgsToUserid() {
 		return this.usersByUsermsgsToUserid;
 	}
@@ -72,6 +76,7 @@ public class UserMessages implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "usermsgs_from_userid")
+	@Fetch (FetchMode.SELECT)
 	public Users getUsersByUsermsgsFromUserid() {
 		return this.usersByUsermsgsFromUserid;
 	}

@@ -6,6 +6,8 @@ package com.theforum.api;
 import java.net.HttpURLConnection;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -56,10 +58,10 @@ public class UserMessagesRestApi {
 		List<UserMessages> um_list = userMessageManager.loadAllUserMessages();
 		List<MessagesWrapper> mw_list = new ArrayList<MessagesWrapper>();
 		for (UserMessages item : um_list) {
-					mw_list.add(new MessagesWrapper(item.getId(), item.getUsersByUsermsgsFromUserid().getUsername(),
-					item.getUsersByUsermsgsToUserid().getUsername(), item.getUsermsgsSubject(),
-					item.getUsermsgsText()));
-
+			Users fromUser=item.getUsersByUsermsgsFromUserid();
+			MessagesWrapper mw = new MessagesWrapper(item.getId(), fromUser.getUsername(),
+					item.getUsersByUsermsgsToUserid().getUsername(), item.getUsermsgsText(),fromUser.getUserRole().name(),fromUser.getAvator(),item.getUsermsgsDate().toString());
+			mw_list.add(mw);
 		}
 
 		return Response.status(200).entity(um_list).build();
@@ -74,15 +76,38 @@ public class UserMessagesRestApi {
 		JSONObject jsonObject = new JSONObject();
 
 		Users cur_u = userManager.findUserById(userID);
+		//find list of all mesages to current user
 		List<UserMessages> um_list = cur_u.getUserMessgesesForUsermsgsToUserid();
-
+		
+		//find list of all mesages from current user
+		List<UserMessages> um_list2 = cur_u.getUserMessgesesForUsermsgsFromUserid();
+		
+		um_list.addAll(um_list2);
+		
+		//order list by created date:
+		
+//		Collections.sort(um_list, new Comparator<UserMessages>() {
+//		    public int compare(UserMessages o1, UserMessages o2) {
+//		    	return o1.getUsermsgsDate().compareTo(o2.getUsermsgsDate());
+//		    } 
+//		});		
+		
+//		Collections.sort(um_list, 
+//                (o1, o2) -> o1.getUsermsgsDate().compareTo(o2.getUsermsgsDate()));
+//		
+		um_list.sort(Comparator.comparing(UserMessages::getUsermsgsDate));	
+		
+		//add both lists to one warper objects list
 		List<MessagesWrapper> mw_list = new ArrayList<MessagesWrapper>();
 		for (UserMessages item : um_list) {
-
-			mw_list.add(new MessagesWrapper(item.getId(), item.getUsersByUsermsgsFromUserid().getUsername(),
-					item.getUsersByUsermsgsToUserid().getUsername(), item.getUsermsgsSubject(),
-					item.getUsermsgsText()));
+			Users fromUser=item.getUsersByUsermsgsFromUserid();
+			MessagesWrapper mw = new MessagesWrapper(item.getId(), fromUser.getUsername(),
+					item.getUsersByUsermsgsToUserid().getUsername(), item.getUsermsgsText(),fromUser.getUserRole().name(),fromUser.getAvator(),item.getUsermsgsDate().toString());
+			mw_list.add(mw);
 		}
+
+
+		
 		return Response.status(200).entity(mw_list).build();
 	}
 
@@ -95,13 +120,24 @@ public class UserMessagesRestApi {
 
 		JSONObject jsonObject = new JSONObject();
 
-		if (mw.getTitle() == null) {
+		if (mw.getText() == null) {
 			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Title  is mandatory").build());
+					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Text  is mandatory").build());
 		}
 
+		Users fromUser= userManager.findByUserName(mw.getFromUserName());
+		Users toUser= userManager.findByUserName(mw.getToUserName());
+		if (fromUser == null || toUser ==null) {
+			throw new WebApplicationException(
+					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("UserFrom or userTo is empty").build());
+		}
+		
 		UserMessages um = new UserMessages();
-		um.setUsermsgsSubject(mw.getTitle());
+
+
+		um.setUsersByUsermsgsFromUserid(fromUser);
+		um.setUsersByUsermsgsToUserid(toUser);
+		
 		um.setUsermsgsText(mw.getText());
 
 		userMessageManager.saveOrUpdateUserMessage(um);
@@ -167,9 +203,9 @@ public class UserMessagesRestApi {
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("id  is mandatory").build());
 		}
 
-		if (mw.getTitle() == null) {
+		if (mw.getText() == null) {
 			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("title  is mandatory").build());
+					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Text  is mandatory").build());
 		}
 
 		UserMessages cur_um = userMessageManager.findUserMessageById(mw.getId());
@@ -179,7 +215,6 @@ public class UserMessagesRestApi {
 			return Response.status(200).entity(jsonObject.toString()).build();
 		}
 
-		cur_um.setUsermsgsSubject(mw.getTitle());
 		cur_um.setUsermsgsText(mw.getText());
 
 		userMessageManager.saveOrUpdateUserMessage(cur_um);

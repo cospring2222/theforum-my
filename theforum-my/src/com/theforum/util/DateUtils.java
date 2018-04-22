@@ -30,6 +30,7 @@ public class DateUtils {
 		result = formatter.format(date);
 
 	    return result;
-}
+	}
+
 
 }
