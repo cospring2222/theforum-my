@@ -73,8 +73,14 @@ public class UserMessagesRestApi {
 	@Produces("application/json")
 	public Response getAllUserMessagesByUser(@PathParam("id") Long userID) throws JSONException {
 
-		JSONObject jsonObject = new JSONObject();
+		//add list to one warper objects list
+		List<MessagesWrapper> mw_list = getAllMessagesByUser(userID);
 
+		return Response.status(200).entity(mw_list).build();
+	}
+	
+	
+	private List<MessagesWrapper>  getAllMessagesByUser(Long userID) throws JSONException {
 		Users cur_u = userManager.findUserById(userID);
 		//find list of all mesages to current user
 		List<UserMessages> um_list = cur_u.getUserMessgesesForUsermsgsToUserid();
@@ -92,13 +98,13 @@ public class UserMessagesRestApi {
 		List<MessagesWrapper> mw_list = new ArrayList<MessagesWrapper>();
 		for (UserMessages item : um_list) {
 			Users fromUser=item.getUsersByUsermsgsFromUserid();
-			MessagesWrapper mw = new MessagesWrapper(item.getId(), fromUser.getUsername(),
-					item.getUsersByUsermsgsToUserid().getUsername(), item.getUsermsgsText(),fromUser.getUserRole().name(),fromUser.getAvator(),item.getUsermsgsDate().toString());
+			MessagesWrapper mw = new MessagesWrapper(item.getId(), fromUser.getUsername(),	item.getUsersByUsermsgsToUserid().getUsername(), item.getUsermsgsText(),fromUser.getUserRole().name(),fromUser.getAvator(),item.getUsermsgsDate().toString());
 			mw_list.add(mw);
 		}
-
-		return Response.status(200).entity(mw_list).build();
+		return mw_list;
+		
 	}
+	
 
 	//API creating new UserMessage with received date
 	@POST
@@ -130,8 +136,13 @@ public class UserMessagesRestApi {
 		um.setUsermsgsText(mw.getText());
 
 		userMessageManager.saveOrUpdateUserMessage(um);
+		
+		
+		//add list to one warper objects list
+		List<MessagesWrapper> mw_list = getAllMessagesByUser(fromUser.getUserId());
+		
 
-		return Response.status(200).entity(jsonObject.toString()).build();
+		return Response.status(200).entity(mw_list).build();
 
 	}
 
