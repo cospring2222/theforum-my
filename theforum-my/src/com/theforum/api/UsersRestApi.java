@@ -45,12 +45,12 @@ public class UsersRestApi {
 
 		if (uw.getUsername() == null) {
 			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("username  is mandatory").build());
+					Response.status(400).entity("username  is mandatory").build());
 		}
 
 		if (uw.getPassword() == null) {
 			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("password  is mandatory").build());
+					Response.status(400).entity("password  is mandatory").build());
 		}
 
 		// check if username alredy exist
@@ -60,7 +60,7 @@ public class UsersRestApi {
 
 		if (userExsists) {
 			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("username already in use").build());
+					Response.status(400).entity("username already in use").build());
 
 		}
 		// if username is avilible create new
@@ -74,7 +74,7 @@ public class UsersRestApi {
 
 		userManager.saveOrUpdateUser(u);
 
-		return Response.status(200).entity(jsonObject.toString()).build();
+		return Response.status(200).entity(u).build();
 	}
 
 	
@@ -95,6 +95,7 @@ public class UsersRestApi {
 		}
 		return Response.status(200).entity(uw_list).build();
 	}
+	
 
 	//API return list of all Users with pagination
 	@Path("/list/page")
@@ -145,26 +146,41 @@ public class UsersRestApi {
 
 		return Response.status(200).entity(jsonObject.toString()).build();
 	}
-
-	//API get edit method return User by giving  ID for editing
+	
+	//API return total users lenght number
 	@GET
-	@Path("/edit")
+	@Path("/totallenght")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	public Response editUser(@QueryParam("userID") Long userID) throws JSONException {
+	public Response getAllUsersLength() throws JSONException {
+
+		List<Users> users = userManager.loadAllUsers();
+
+		return Response.status(200).entity(users.size()).build();
+	}
+	
+	//API get edit method return User by giving  ID for editing
+	@GET
+	@Path("/getuserbyid/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces("application/json")
+	public Response editUser(@PathParam("id") Long userID) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 
 		Users cur_u = userManager.findUserById(userID);
-		if (cur_u != null) {
-			return Response.status(200).entity(cur_u).build();
-		} else {
+		if (cur_u== null) {
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Username is not exists.");
-
+			return Response.status(400).entity(jsonObject.toString()).build();
 		}
-
-		return Response.status(200).entity(jsonObject.toString()).build();
+		
+		UserWrapper uw = new UserWrapper(cur_u.getUserId(), cur_u.getUsername(), cur_u.getUserRole().name(),
+				cur_u.getUserFirstName(), cur_u.getUserSecondName(), cur_u.getUserPassword(), "");
+		uw.setAvator(cur_u.getAvator());
+		
+		return Response.status(200).entity(uw).build();
+		
 	}
 	
 	//API post edit method to edit User by giving  date
@@ -178,17 +194,17 @@ public class UsersRestApi {
 
 		if (uw.getId() == null) {
 			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("id  is mandatory").build());
+					Response.status(400).entity("id  is mandatory").build());
 		}
 
 		if (uw.getUsername() == null) {
 			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("username  is mandatory").build());
+					Response.status(400).entity("username  is mandatory").build());
 		}
 
 		if (uw.getPassword() == null) {
 			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("password  is mandatory").build());
+					Response.status(400).entity("password  is mandatory").build());
 		}
 
 		Users cur_u = userManager.findUserById(uw.getId());
@@ -196,7 +212,7 @@ public class UsersRestApi {
 		if (cur_u == null) {
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Username is not exists.");
-			return Response.status(200).entity(jsonObject.toString()).build();
+			return Response.status(400).entity(jsonObject.toString()).build();
 		}
 		
 		// check if new username is alredy taked
@@ -205,11 +221,8 @@ public class UsersRestApi {
 		if (!newUserName.equals(prevUserName)) {
 			Users check_new_username_exist = userManager.findByUserName(newUserName);
 			if (check_new_username_exist != null) {
-				jsonObject.put("status", "failed");
-				jsonObject.put("message", "User name" + cur_u.getUsername() + "is alredy in use, select other one.");
-				return Response.status(200).entity(jsonObject.toString()).build();
+				return Response.status(400).entity("User name " + newUserName + " is alredy in use, select other one.").build();
 			}
-
 		}
 		
 		cur_u.setUsername(newUserName);
@@ -221,7 +234,7 @@ public class UsersRestApi {
 
 		userManager.saveOrUpdateUser(cur_u);
 
-		return Response.status(200).entity(jsonObject.toString()).build();
+		return Response.status(200).entity(uw).build();
 	}
 
 }
