@@ -120,6 +120,7 @@ public class DiscutionsRestApi {
 		return Response.status(200).entity(dw_list).build();
 	}
 
+	//Up discussion watchers counter
 	@POST
 	@Path("/theamwatcher/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -130,7 +131,6 @@ public class DiscutionsRestApi {
 		//chek if not null
 		if (disc == null) {
 					return Response.status(400).entity("Discussion is not exist").build();
-//					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Discussion is not exist").build();
 
 		}	
 		topicManager.increaseWatcherCounter(disc.getTopicId());
