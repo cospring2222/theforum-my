@@ -12,6 +12,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -123,24 +124,23 @@ public class UsersRestApi {
 
 
 	//API delete User by giving  ID
-	@DELETE
-	@Path("/delete")
+	@GET
+	@Path("/delete/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	// public Response delete(@QueryParam("userID") Long userID)
-	public Response deleteUser(@QueryParam("userID") Long userID) throws JSONException {
+	public Response deleteUser(@PathParam("id") Long userID) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 
 		// Long userID = 1;
 		Users cur_u = userManager.findUserById(userID);
-		if (cur_u != null) {
+		//if exist and not ADMIN
+		if (cur_u != null && cur_u.getUserRole() != Role.ADMIN ) {
 			userManager.deleteUser(cur_u);
-
 		} else {
 			jsonObject.put("status", "failed");
-			jsonObject.put("message", "Username is not exists.");
-
+			jsonObject.put("message", "Username is not exists or user in role ADMIN.");
+			return Response.status(400).entity(jsonObject.toString()).build();
 		}
 
 		return Response.status(200).entity(jsonObject.toString()).build();

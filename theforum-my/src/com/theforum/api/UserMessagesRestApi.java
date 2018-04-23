@@ -163,7 +163,7 @@ public class UserMessagesRestApi {
 		} else {
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "UserMessage is not exists.");
-
+			return Response.status(400).entity(jsonObject.toString()).build();
 		}
 
 		return Response.status(200).entity(jsonObject.toString()).build();
