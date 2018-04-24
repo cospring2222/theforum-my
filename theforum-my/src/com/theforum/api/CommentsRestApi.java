@@ -54,16 +54,27 @@ public class CommentsRestApi {
 	@Path("{id}")
 	@Produces("application/json")
 	public Response getAllCommentsByDisscution(@PathParam("id") Long disscID) throws JSONException {
+		// find parent discussion
 		Topics cur_topic = topicManager.findTopicById(disscID);
+
+		if (cur_topic == null) {// if not exist return error
+			throw new WebApplicationException(Response.status(400).entity("Disscution is not exists.").build());
+		}
+
+		// get all comments from parent discussion
 		List<Posts> posts = cur_topic.getPostses();
-		// return only topics relevant date ws DiscutionWrapper array
+
+		// convert to wrapper format that matching client side
 		List<CommentWrapper> cw_list = new ArrayList<CommentWrapper>();
+
 		for (Posts item : posts) {
 			Users post_user = item.getUsers();
-			if (post_user == null){
-				return Response.status(400).entity("Error:Some post have no user ").build();
+			if (post_user == null) {// if not exist return error
+				throw new WebApplicationException(Response.status(400).entity("Some post have no user.").build());
 			}
-			CommentWrapper cw = new CommentWrapper(item.getPostId(), disscID, post_user.getUsername(), item.getPostText(), new Long(0));
+
+			CommentWrapper cw = new CommentWrapper(item.getPostId(), disscID, post_user.getUsername(),
+					item.getPostText(), new Long(0));
 			cw.setAuthor_join(DateUtils.dateToMonthYearOnlyString(post_user.getUserRegdate()));
 			cw.setAuthor_avator(post_user.getAvator());
 			cw.setCreated(item.getPostDate().toString());
@@ -75,7 +86,7 @@ public class CommentsRestApi {
 
 	}
 
-	// API return list of comments(posts) by User ID
+	// API return list of comments(posts) by User ID , not in use pof now
 	@Path("/getallbyuser")
 	@GET
 	@Produces("application/json")
@@ -108,37 +119,36 @@ public class CommentsRestApi {
 	@Produces("application/json")
 	public Response createPost(CommentWrapper cw) throws JSONException {
 
-		JSONObject jsonObject = new JSONObject();
-
+		// check if model data correct
 		if (cw.getBody() == null || cw.getBody() == "") {
-			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Body  is mandatory").build());
+			throw new WebApplicationException(Response.status(400).entity("Body  is mandatory").build());
 		}
 
+		// create new comments
 		Posts post = new Posts();
 
+		// find parent discussion by id
 		Topics topic = topicManager.findTopicById(cw.getDiscussionid());
-		if (topic == null) {
-			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Parent topic is not exist").build());
+
+		if (topic == null) {// if not exist return error
+			throw new WebApplicationException(Response.status(400).entity("Parent topic is not exist").build());
 
 		}
+		// set parent discussion for comment
 		post.setTopics(topic);
-		
-		
-		// set forum parent too?
 
+		// find parent user
 		Users user = userManager.findByUserName(cw.getAuthor());
 
-		// Users user = userManager.findUserById(new Long(1));
-		if (user == null) {
-			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Parent user is not exist").build());
+		if (user == null) {// if not exist return error
+			throw new WebApplicationException(Response.status(400).entity("Parent user is not exist").build());
 
 		}
 
+		// set parent user
 		post.setUsers(user);
 
+		// set data and save
 		post.setPostText(cw.getBody());
 
 		postManager.saveOrUpdatePost(post);
@@ -148,84 +158,79 @@ public class CommentsRestApi {
 
 		// topic comments counter update
 		topicManager.increaseCommentCounter(topic.getTopicId());
-		
-		
-		return Response.status(200).entity("Comment added").build();
+
+		return Response.status(200).entity(cw).build();
 
 	}
 
 	// API delete comment(post) by giving ID
-	// @DELETE
 	@GET
 	@Path("/delete/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
 	public Response delete(@PathParam("id") Long commentID) throws JSONException {
 
-		JSONObject jsonObject = new JSONObject();
-
-		// Long userID = 1;
+		// find comment by id
 		Posts cur_post = postManager.findPostById(commentID);
-		if (cur_post == null) {
-
-			jsonObject.put("status", "failed");
-			jsonObject.put("message", "Post is not exists.");
-
+		if (cur_post == null) {// if not exist return error
+			throw new WebApplicationException(Response.status(400).entity("Comment is not exist").build());
 		}
-
+		// find parent discussion and user
 		Users parent_user = cur_post.getUsers();
-		Topics parent_topic  = cur_post.getTopics();
-		
+		Topics parent_topic = cur_post.getTopics();
+
 		postManager.deletePost(cur_post);
 
-		// user comments counter update
+		// comments counter update if user exist
 		if (parent_user != null) {
 			userManager.decreaseCommentCounter(parent_user.getUserId());
 		}
-		
-		// topic comments counter update
+
+		// comments counter update if discussion exist
 		if (parent_topic != null) {
-			topicManager.decreaseCommentCounter(parent_topic.getTopicId());	
-		}
-		
-		return Response.status(200).entity(jsonObject.toString()).build();
-	}
-
-	// API get edit method return comment(post) by giving ID for editing
-	@GET
-	@Path("/edit")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces("application/json")
-	public Response edit(@QueryParam("commentID") Long commentID) throws JSONException {
-
-		JSONObject jsonObject = new JSONObject();
-
-		Posts cur_post = postManager.findPostById(commentID);
-
-		if (cur_post != null) {
-			Long ID = cur_post.getPostId();
-			Users u = cur_post.getUsers();
-			if (u == null) {
-				jsonObject.put("status", "failed");
-				jsonObject.put("message", "Comment parent user is not exists.");
-			}
-			String un = u.getUsername();
-			String body = cur_post.getPostText();
-			// CommentWrapper cw = new CommentWrapper(ID,un,body);
-			// CommentWrapper cw = new
-			// CommentWrapper(item.getTopics().getTopicId(),
-			// item.getUsers().getUsername(),
-			// item.getPostText(),item.getPostId());
-			CommentWrapper cw = new CommentWrapper();
-			return Response.status(200).entity(cw).build();
-		} else {
-			jsonObject.put("status", "failed");
-			jsonObject.put("message", "Comment is not exists.");
-
+			topicManager.decreaseCommentCounter(parent_topic.getTopicId());
 		}
 
-		return Response.status(200).entity(jsonObject.toString()).build();
+		return Response.status(200).entity("Comment deleted Successful").build();
 	}
+
+	// API get edit method return comment(post) by giving ID for editing not in
+	// use for now
+	// @GET
+	// @Path("/edit")
+	// @Consumes(MediaType.APPLICATION_JSON)
+	// @Produces("application/json")
+	// public Response edit(@QueryParam("commentID") Long commentID) throws
+	// JSONException {
+	//
+	// JSONObject jsonObject = new JSONObject();
+	//
+	// Posts cur_post = postManager.findPostById(commentID);
+	//
+	// if (cur_post != null) {
+	// Long ID = cur_post.getPostId();
+	// Users u = cur_post.getUsers();
+	// if (u == null) {
+	// jsonObject.put("status", "failed");
+	// jsonObject.put("message", "Comment parent user is not exists.");
+	// }
+	// String un = u.getUsername();
+	// String body = cur_post.getPostText();
+	// // CommentWrapper cw = new CommentWrapper(ID,un,body);
+	// // CommentWrapper cw = new
+	// // CommentWrapper(item.getTopics().getTopicId(),
+	// // item.getUsers().getUsername(),
+	// // item.getPostText(),item.getPostId());
+	// CommentWrapper cw = new CommentWrapper();
+	// return Response.status(200).entity(cw).build();
+	// } else {
+	// jsonObject.put("status", "failed");
+	// jsonObject.put("message", "Comment is not exists.");
+	//
+	// }
+	//
+	// return Response.status(200).entity(jsonObject.toString()).build();
+	// }
 
 	// API post edit method to edit comment(post) by giving date
 	@POST
@@ -234,32 +239,30 @@ public class CommentsRestApi {
 	@Produces("application/json")
 	public Response update(CommentWrapper cw) throws JSONException {
 
-		JSONObject jsonObject = new JSONObject();
+		if (cw.getId() == null) {
+			throw new WebApplicationException(
+					Response.status(400).entity("id is mandatory").build());
+		}
 
-		// if (cw.getId() == null) {
-		// throw new WebApplicationException(
-		// Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("id is
-		// mandatory").build());
-		// }
-		//
-		// if (cw.getBody() == null) {
-		// throw new WebApplicationException(
-		// Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("body is
-		// mandatory").build());
-		// }
-		//
-		// Posts cur_comment = postManager.findPostById(cw.getId());
-		// if (cur_comment == null) {
-		// jsonObject.put("status", "failed");
-		// jsonObject.put("message", "Comment is not exists.");
-		// return Response.status(200).entity(jsonObject.toString()).build();
-		// }
-		//
-		// cur_comment.setPostText(cw.getBody());
-		// // cur_dissc.setForumDescription(dw.getText()); //body?
-		//
-		// postManager.saveOrUpdatePost(cur_comment);
-		return Response.status(200).entity(jsonObject.toString()).build();
+		if (cw.getBody() == null) {
+			throw new WebApplicationException(
+					Response.status(400).entity("body is mandatory").build());
+		}
+
+		Posts cur_comment = postManager.findPostById(cw.getId());
+		
+		if (cur_comment == null) {
+			throw new WebApplicationException(
+					Response.status(400).entity("Comment is not exists.").build());
+		}
+
+		//update text and save
+		cur_comment.setPostText(cw.getBody());
+
+		postManager.saveOrUpdatePost(cur_comment);
+		
+		
+		return Response.status(200).entity(cw).build();
 	}
 
 }

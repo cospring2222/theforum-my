@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 
-
-
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -54,14 +52,14 @@ import com.theforum.util.Role;
 //Rest API for Discussions tasks
 @Path("/discusse")
 public class DiscutionsRestApi {
-	
-	//Tools for work with DB:
+
+	// Tools for work with DB:
 	PostManager postManager = new PostManagerImpl();
 	TopicManager topicManager = new TopicManagerImpl();
 	ForumManager forumManager = new ForumManagerImpl();
 	UserManager userManager = new UserManagerImpl();
 
-	//API return list of discussions(topics) by theam(Forum) ID
+	// API return list of discussions(topics) by theam(Forum) ID
 	@Path("/getallbytheam")
 	@GET
 	@Produces("application/json")
@@ -69,242 +67,253 @@ public class DiscutionsRestApi {
 
 		JSONObject jsonObject = new JSONObject();
 
+		// find parent forum by id
 		Forums cur_forum = forumManager.findForumById(theamID);
+
+		if (cur_forum == null) { // return error if not exist
+			throw new WebApplicationException(Response.status(400).entity("Parent forum is not exist").build());
+		}
+
+		// find discussions from forum parent
 		List<Topics> topics = cur_forum.getTopicses();
-		// return only topics relevant date ws DiscutionWrapper array
+		// convert to wrapper format list that maching client side
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
 
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), item.getTopicBody(),
+					item.getUsers().getUsername(), item.getUsers().getUserRole().name(), item.getTopicWatcherNumber(),
+					item.getTopicCommentNumber(), item.getTopicDate());
 			dw.setBody(item.getTopicBody());
 
 			dw_list.add(dw);
 		}
+
 		return Response.status(200).entity(dw_list).build();
 	}
-	
-	//API return list of discussions(topics) by theam(Forum) ID
+
+	// API return discussion(topic) by ID
 	@Path("/getbyid/{id}")
 	@GET
 	@Produces("application/json")
 	public Response getById(@PathParam("id") Long discID) throws JSONException {
 
-		JSONObject jsonObject = new JSONObject();
+		// find discussion by id
+		Topics item = topicManager.findTopicById(discID);
 
-		Topics  item= topicManager.findTopicById(discID);
-		DiscutionWrapper cur_topic= new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
-				item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
+		if (item == null) { // return error if not exist
+			throw new WebApplicationException(Response.status(400).entity("Discussion is not exist").build());
+		}
+
+		// convert to wrapper format that maching client side
+		DiscutionWrapper cur_topic = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),
+				item.getTopicBody(), item.getUsers().getUsername(), item.getUsers().getUserRole().name(),
+				item.getTopicWatcherNumber(), item.getTopicCommentNumber(), item.getTopicDate());
 		cur_topic.setAuthor_avator(item.getUsers().getAvator());
 		cur_topic.setBody(item.getTopicBody());
 
 		return Response.status(200).entity(cur_topic).build();
 	}
 
-	//API return list of discussions(topics) by user ID
+	// API return list of discussions(topics) by user ID , not in use for now
 	@Path("/getallbyuser")
 	@GET
 	@Produces("application/json")
 	public Response getAllDiscussionsByUser(@QueryParam("userID") Long userID) throws JSONException {
 
-		JSONObject jsonObject = new JSONObject();
-
+		// find user by id
 		Users cur_u = userManager.findUserById(userID);
-		List<Topics> topics = cur_u.getTopicses();
-		// return only topics relevant date ws DiscutionWrapper array
-		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
-		for (Topics item : topics) {
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber(),item.getTopicDate());
+
+		if (cur_u == null) { // return error if not exist
+			throw new WebApplicationException(Response.status(400).entity("{Parent user  is not exist").build());
 		}
+		// find all topics for this user
+		List<Topics> topics = cur_u.getTopicses();
+
+		// convert to wrapper format that maching client side
+		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
+
+		for (Topics item : topics) {
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), item.getTopicBody(),
+					item.getUsers().getUsername(), item.getUsers().getUserRole().name(), item.getTopicWatcherNumber(),
+					item.getTopicCommentNumber(), item.getTopicDate());
+		}
+
 		return Response.status(200).entity(dw_list).build();
 	}
 
-	//Up discussion watchers counter
+	// Up discussion watchers counter by discussion id
 	@POST
 	@Path("/theamwatcher/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
 	public Response updateTeamwatherCounterByTheamID(@PathParam("id") Long discID) throws JSONException {
-		JSONObject jsonObject = new JSONObject();
-		Topics disc= topicManager.findTopicById(discID);//find discussion
-		//chek if not null
+		// find discussion
+		Topics disc = topicManager.findTopicById(discID);// find discussion
+		// chek if not null
 		if (disc == null) {
-					return Response.status(400).entity("Discussion is not exist").build();
+			throw new WebApplicationException(Response.status(400).entity("Discussion is not exist").build());
+		}
 
-		}	
+		// increase counter
 		topicManager.increaseWatcherCounter(disc.getTopicId());
-		
-		
+
 		return Response.status(200).entity("Discussion counter increased").build();
 	}
-	
-	//API creating new discussions(topic) with received date
+
+	// API creating new discussions(topic) with received date
 	@POST
 	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
 
-    public Response createDiscution(DiscutionWrapperGlobal dwg) throws JSONException  {
+	public Response createDiscution(DiscutionWrapperGlobal dwg) throws JSONException {
 
-		JSONObject jsonObject = new JSONObject();
-		
-		Theam dw = dwg.getTheam(); // as disscution warper 
-		
+		// get discussion data from global discussion warper
+		Theam dw = dwg.getTheam(); // as disscution warper
+
+		// check model poperties
 		if (dw.getTitle() == null || dw.getTitle() == "") {
-			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Title  is mandatory").build());
+			throw new WebApplicationException(Response.status(400).entity("Title  is mandatory").build());
 		}
 
+		// create new discussion
 		Topics topic = new Topics();
 
+		// find parent forum
 		Forums forum = forumManager.findForumById(dwg.getTheamid());
-		if (forum == null) {
-			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Parent forum is not exist").build());
+		if (forum == null) { // if not exist return error
+			throw new WebApplicationException(Response.status(400).entity("Parent forum is not exist").build());
 
 		}
+		// set parent forum for discussion
 		topic.setForums(forum);
 
+		// find parent user
 		Users user = userManager.findByUserName(dwg.getTheam().getAuthor());
-		if (user == null) {
-			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("Parent user is not exist").build());
+		if (user == null) {// if not exist return error
+			throw new WebApplicationException(Response.status(400).entity("Parent user is not exist").build());
 
 		}
+		// set parent user for discussion
 		topic.setUsers(user);
 
+		// set data for discussion and create
 		topic.setTopicSubject(dw.getTitle());
 		topic.setTopicBody(dw.getBody());
 
 		topicManager.saveOrUpdateTopic(topic);
 
+		// get again forum parent from DB with updated list of discussions
 		forum = forumManager.findForumById(dwg.getTheamid());
 		List<Topics> topics = forum.getTopicses();
-		// return only topics relevant date ws DiscutionWrapper array
+
+		// convert to wrapper format that matching client side
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), item.getTopicBody(),
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
+			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),
+					item.getTopicBody(), item.getUsers().getUsername(), item.getUsers().getUserRole().name(),
+					item.getTopicWatcherNumber(), item.getTopicCommentNumber(), item.getTopicDate());
 			dw_list.add(new_dw);
 		}
-		return Response.status(200).entity(dw_list).build();		
+
+		return Response.status(200).entity(dw_list).build();
 
 	}
 
-	
-	//API delete discussions(topic) by giving  ID
-//	@DELETE
+	// API delete discussions(topic) by giving ID
 	@GET
 	@Path("/delete/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
 	public Response delete(@PathParam("id") Long disscID) throws JSONException {
 
-		JSONObject jsonObject = new JSONObject();
-
-		// Long userID = 1;
-		
+		//find discussion by id
 		Topics cur_t = topicManager.findTopicById(disscID);
-		if (cur_t == null) {
-			jsonObject.put("status", "failed");
-			jsonObject.put("message", "Disscution is not exists.");
-			
-			return Response.status(400).entity(jsonObject.toString()).build();
-		} 
-		
-		Long cur_forum_id = cur_t.getForums().getForumId(); //parent forum id
-		
-		 //all comments for current discussion delete too
-    	List<Posts> tp= cur_t.getPostses();
-    	
-    	for (Posts post : tp) {  		
-    		postManager.deletePost(post);
+		if (cur_t == null) {//if not exist return error
+			throw new WebApplicationException(
+					Response.status(400).entity("Disscution is not exists.").build());
 		}
-    	//now delete discussion
+
+		//find parent forum id
+		Long cur_forum_id = cur_t.getForums().getForumId();
+
+		// all comments for current discussion delete too
+		List<Posts> tp = cur_t.getPostses();
+
+		for (Posts post : tp) {
+			
+			postManager.deletePost(post);
+			Users user = post.getUsers();
+			// update user posts counter 
+			if (user != null) {
+				userManager.decreaseCommentCounter(user.getUserId());
+			}			
+		}
+		// now delete discussion
 		topicManager.deleteTopic(cur_t);
-		
-		//find updated list of discussions by parent forum id
-		Forums cur_forum = forumManager.findForumById(cur_forum_id); //parent forum
+
+		// find updated list of discussions by parent forum id
+		Forums cur_forum = forumManager.findForumById(cur_forum_id); // parent
+																		// forum
 		List<Topics> topics = cur_forum.getTopicses();
-		// return only topics relevant date ws DiscutionWrapper array
+		// convert to wrapper format that matching client side
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			
-			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
+
+			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(), item.getTopicBody(),
+					item.getUsers().getUsername(), item.getUsers().getUserRole().name(), item.getTopicWatcherNumber(),
+					item.getTopicCommentNumber(), item.getTopicDate());
 			dw_list.add(dw);
 		}
-		return Response.status(200).entity(dw_list).build();	
+		return Response.status(200).entity(dw_list).build();
 
 	}
-	//API get edit method return discussions(topic) by giving  ID for editing
-	@GET
-	@Path("/edit")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces("application/json")
-	public Response edit(@QueryParam("disscID") Long disscID) throws JSONException {
 
-		JSONObject jsonObject = new JSONObject();
-
-		Topics cur_t = topicManager.findTopicById(disscID);
-		
-		if (cur_t == null){
-			jsonObject.put("status", "failed");
-			jsonObject.put("message", "Disscution is not exists.");
-			return Response.status(400).entity(jsonObject.toString()).build();
-		}
-	
-		return Response.status(200).entity(cur_t).build();
-	}
-
-	//API post edit method to edit discussions(topic) by giving  date
+	// API post edit method to edit discussions(topic) by giving date
 	@POST
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
 	public Response update(DiscutionWrapper dw) throws JSONException {
-
-		JSONObject jsonObject = new JSONObject();
-
+		
+		//check model data
 		if (dw.getId() == null) {
 			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("id is  mandatory").build());
+					Response.status(400).entity("id is  mandatory").build());
 		}
 
 		if (dw.getTitle() == null) {
 			throw new WebApplicationException(
-					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("title is mandatory").build());
+					Response.status(400).entity("title is mandatory").build());
 		}
 
-		// body mandatory?
-		// if (dw.getTitle() == null) {
-		// throw new WebApplicationException(
-		// Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("title is
-		// mandatory").build());
-		// }
-
+		//find discussion by id
 		Topics cur_dissc = topicManager.findTopicById(dw.getId());
-		if (cur_dissc == null) {
-			jsonObject.put("status", "failed");
-			jsonObject.put("message", "Disscution is not exists.");
-			return Response.status(200).entity(jsonObject.toString()).build();
+		
+		if (cur_dissc == null) {//if not exist return error
+			throw new WebApplicationException(
+					Response.status(400).entity("Disscution is not exists.").build());
 		}
-
+		
+		//update date
 		cur_dissc.setTopicSubject(dw.getTitle());
-		// cur_dissc.setForumDescription(dw.getText()); //body?
 
 		topicManager.saveOrUpdateTopic(cur_dissc);
+
+		//get updated list of discussions
 		Forums cur_forum = cur_dissc.getForums();
 		List<Topics> topics = cur_forum.getTopicses();
-		// return only topics relevant date ws DiscutionWrapper array
+		
+		// convert to wrapper format that matching client side
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
-			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
-					item.getUsers().getUsername(),item.getUsers().getUserRole().name(),item.getTopicWatcherNumber(),item.getTopicCommentNumber() ,item.getTopicDate());
+			DiscutionWrapper new_dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),
+					item.getTopicBody(), item.getUsers().getUsername(), item.getUsers().getUserRole().name(),
+					item.getTopicWatcherNumber(), item.getTopicCommentNumber(), item.getTopicDate());
 			dw_list.add(new_dw);
 		}
-		return Response.status(200).entity(dw_list).build();	
+		
+		return Response.status(200).entity(dw_list).build();
 	}
 
 }

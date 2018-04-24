@@ -57,9 +57,13 @@ public class TheamRestApi {
 	public Response getAllTheams() throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
-
+		//find all forums
+		
 		List<Forums> forums = forumManager.loadAllForums();
+		
+		//convert to wrapper format list that maching client side
 		List<TheamWrapper> tw_list = new ArrayList<TheamWrapper>();
+		
 		for (Forums item : forums) {
 			tw_list.add(new TheamWrapper(item.getForumId(), item.getForumName(), item.getForumDescription(),
 					item.getForumPic()));
@@ -79,7 +83,7 @@ public class TheamRestApi {
 		Forums cur_forum = forumManager.findForumById(theamID);
 
 		List<Topics> topics = cur_forum.getTopicses();
-		// return only topics relevant date ws DiscutionWrapper array
+		//convert to wrapper format list that maching client side
 		List<DiscutionWrapper> dw_list = new ArrayList<DiscutionWrapper>();
 		for (Topics item : topics) {
 			DiscutionWrapper dw = new DiscutionWrapper(item.getTopicId(), item.getTopicSubject(),  item.getTopicBody(),
@@ -112,8 +116,11 @@ public class TheamRestApi {
 
 		theam.setForumDescription(tw.getText());
 		forumManager.saveOrUpdateForum(theam);
-
+		
+		//find all forums to return after adding new one
 		List<Forums> forums = forumManager.loadAllForums();
+		
+		//convert to wrapper format list that maching client side
 		List<TheamWrapper> tw_list = new ArrayList<TheamWrapper>();
 		for (Forums item : forums) {
 			tw_list.add(new TheamWrapper(item.getForumId(), item.getForumName(), item.getForumDescription(),
@@ -124,7 +131,6 @@ public class TheamRestApi {
 	}
 
 	// API delete theam(forum) by giving ID
-	// @DELETE
 	@GET
 	@Path("/delete/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -135,12 +141,13 @@ public class TheamRestApi {
 
 		//find forum by id
 		Forums cur_f = forumManager.findForumById(theamID);
-		if (cur_f == null) {
+		if (cur_f == null) { //if not exist return error
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Forum is not exists.");
 			return Response.status(400).entity(jsonObject).build();
 		}
-		//find all disscusions of the forum for tree dell
+		
+		//find all disscusions of the forum with tree deleting (all sons is deleting too)
 		List<Topics> forum_discussiond = cur_f.getTopicses();
 		for (Topics cur_t : forum_discussiond) {
 			//find all comments of the forum for tree dell
@@ -165,7 +172,7 @@ public class TheamRestApi {
 		//load updated forums list
 		List<Forums> forums = forumManager.loadAllForums();		
 		List<TheamWrapper> tw_list = new ArrayList<TheamWrapper>();
-		//convert list from entity object to warper , that used on client side:
+		//convert to wrapper format list that maching client side
 		for (Forums item : forums) {
 			tw_list.add(new TheamWrapper(item.getForumId(), item.getForumName(), item.getForumDescription(),
 					item.getForumPic()));
@@ -175,7 +182,7 @@ public class TheamRestApi {
 
 	}
 
-	// API get edit method return theam(forum) by giving ID for editing
+	// API get edit method return theam(forum) by giving ID for editing not in use for now
 	@GET
 	@Path("/edit")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -204,7 +211,7 @@ public class TheamRestApi {
 	public Response updateTheam(TheamWrapper tw) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
-
+		//check the model properties
 		if (tw.getId() == null) {
 			throw new WebApplicationException(
 					Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("id  is mandatory").build());
@@ -216,10 +223,10 @@ public class TheamRestApi {
 		}
 
 		Forums cur_t = forumManager.findForumById(tw.getId());
-		if (cur_t == null) {
+		if (cur_t == null) { //return error if not exist
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Theam is not exists.");
-			return Response.status(200).entity(jsonObject.toString()).build();
+			return Response.status(400).entity(jsonObject.toString()).build();
 		}
 
 		cur_t.setForumName(tw.getTitle());
@@ -227,7 +234,7 @@ public class TheamRestApi {
 		// cur_t.setForumPic(tw.getPic());
 		forumManager.saveOrUpdateForum(cur_t);
 
-		return Response.status(200).entity(jsonObject.toString()).build();
+		return Response.status(200).entity(tw).build();
 	}
 
 }

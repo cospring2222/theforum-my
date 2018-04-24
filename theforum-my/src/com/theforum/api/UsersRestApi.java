@@ -42,7 +42,7 @@ public class UsersRestApi {
 	@Produces("application/json")
 	public Response createUser(UserRegisterWrapper uw) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
-
+		//cheking of mandatory properties is exist
 		if (uw.getUsername() == null) {
 			throw new WebApplicationException(
 					Response.status(400).entity("username  is mandatory").build());
@@ -86,6 +86,7 @@ public class UsersRestApi {
 
 		List<Users> users = userManager.loadAllUsers();
 
+		//convert to user wrapper format list that maching client side
 		List<UserWrapper> uw_list = new ArrayList<UserWrapper>();
 		for (Users item : users) {
 			UserWrapper uw = new UserWrapper(item.getUserId(), item.getUsername(), item.getUserRole().name(),
@@ -109,9 +110,11 @@ public class UsersRestApi {
 		int counter = 0;
 		for (Users item : users) {
 			counter++;
+			//only needed page data
 			if (pgw.getPageIndex() * pgw.getPageSize() <= counter
 					&& counter < (pgw.getPageIndex() + 1) * pgw.getPageSize()) 
 			{
+				//convert to user wrapper format list that maching client side
 				UserWrapper uw = new UserWrapper(item.getUserId(), item.getUsername(), item.getUserRole().name(),
 						item.getUserFirstName(), item.getUserSecondName(), item.getUserPassword(), "");
 				uw.setAvator(item.getAvator());
@@ -135,10 +138,11 @@ public class UsersRestApi {
 
 		// Long userID = 1;
 		Users cur_u = userManager.findUserById(userID);
-		//if exist and not ADMIN
+		//delete if exist and not ADMIN
 		if (cur_u != null && cur_u.getUserRole() != Role.ADMIN ) {
 			userManager.deleteUser(cur_u);
 		} else {
+			//on error 
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Username is not exists or user in role ADMIN.");
 			return Response.status(400).entity(jsonObject.toString()).build();
@@ -164,17 +168,18 @@ public class UsersRestApi {
 	@Path("/getuserbyid/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	public Response editUser(@PathParam("id") Long userID) throws JSONException {
+	public Response getUserByID(@PathParam("id") Long userID) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
-
+		//find user by ID
 		Users cur_u = userManager.findUserById(userID);
 		if (cur_u== null) {
+			//on error
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Username is not exists.");
 			return Response.status(400).entity(jsonObject.toString()).build();
 		}
-		
+		//convert to user wrapper format that maching client side
 		UserWrapper uw = new UserWrapper(cur_u.getUserId(), cur_u.getUsername(), cur_u.getUserRole().name(),
 				cur_u.getUserFirstName(), cur_u.getUserSecondName(), cur_u.getUserPassword(), "");
 		uw.setAvator(cur_u.getAvator());
@@ -191,7 +196,7 @@ public class UsersRestApi {
 	public Response updateUser(UserWrapper uw) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
-
+		//chek is model uw wth correct data
 		if (uw.getId() == null) {
 			throw new WebApplicationException(
 					Response.status(400).entity("id  is mandatory").build());
@@ -206,10 +211,10 @@ public class UsersRestApi {
 			throw new WebApplicationException(
 					Response.status(400).entity("password  is mandatory").build());
 		}
-
+		//find user
 		Users cur_u = userManager.findUserById(uw.getId());
 
-		if (cur_u == null) {
+		if (cur_u == null) { //on error
 			jsonObject.put("status", "failed");
 			jsonObject.put("message", "Username is not exists.");
 			return Response.status(400).entity(jsonObject.toString()).build();
@@ -224,7 +229,7 @@ public class UsersRestApi {
 				return Response.status(400).entity("User name " + newUserName + " is alredy in use, select other one.").build();
 			}
 		}
-		
+		//update user data
 		cur_u.setUsername(newUserName);
 	    cur_u.setUserRole(Role.valueOf(uw.getRole())); 
 		cur_u.setUserFirstName(uw.getFirstname());
@@ -233,7 +238,7 @@ public class UsersRestApi {
 		cur_u.setAvator(uw.getAvator());
 
 		userManager.saveOrUpdateUser(cur_u);
-
+		//return user wrapper
 		return Response.status(200).entity(uw).build();
 	}
 
