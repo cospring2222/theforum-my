@@ -45,7 +45,7 @@ public class UserMessagesRestApi {
 	// Tools for work with DB:
 	UserMessageManager userMessageManager = new UserMessageManagerImpl();
 	UserManager userManager = new UserManagerImpl();
-
+	
 	// API return list of all UserMessages, not in use for now
 	@Path("/getall")
 	@GET

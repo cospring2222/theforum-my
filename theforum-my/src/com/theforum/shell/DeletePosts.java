@@ -19,14 +19,13 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-
 //Delete old posts class as singelton for sheldure task
 public class DeletePosts implements Job {
 	private static volatile DeletePosts instance;
 	PostManager postManager = new PostManagerImpl();
-	
-	int postLiveTimeDays=30;
-	
+
+	int postLiveTimeDays = 30;
+
 	public static DeletePosts getInstance() {
 		DeletePosts deletePosts = instance;
 		if (deletePosts == null) {
@@ -40,30 +39,28 @@ public class DeletePosts implements Job {
 		return deletePosts;
 	}
 
-
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		//test only task
-		  System.out.println("My First Quartz Scheduler"); 
-		  LocalDateTime now = LocalDateTime.now();
-		  String isoFormat = DateTimeFormatter.ISO_INSTANT.format(now.toInstant(ZoneOffset.UTC));
-		  System.out.println(isoFormat);
-		  
-		  //delete old posts task 
-		  
-		// List<Posts> posts = postManager.loadAllPosts();
-		//
-		// Calendar c=new GregorianCalendar();
-		// c.add(Calendar.DATE, -postLiveTimeDays);
-		// Date d=c.getTime();
-		//
-		// for (Posts item : posts) {
-		// if ( item != null && item.getPostDate().before(d) ) {
-		// postManager.deletePost(item);
-		// }
-		// }
-		// int tmp=1;
+		// test only task
+		System.out.println("My First Quartz Scheduler");
+		LocalDateTime now = LocalDateTime.now();
+		String isoFormat = DateTimeFormatter.ISO_INSTANT.format(now.toInstant(ZoneOffset.UTC));
+		System.out.println(isoFormat);
+
+		// delete old posts task
+
+		List<Posts> posts = postManager.loadAllPosts();
+
+		Calendar c = new GregorianCalendar();
+		c.add(Calendar.DATE, -postLiveTimeDays);
+		Date d = c.getTime();
+
+		for (Posts item : posts) {
+			if (item != null && item.getPostDate().before(d)) {
+				postManager.deletePost(item);
+			}
+		}
+		int tmp = 1;
 	}
-		
-	
+
 }
