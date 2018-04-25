@@ -142,7 +142,7 @@ public class DiscutionsRestApi {
 	}
 
 	// Up discussion watchers counter by discussion id
-	@POST
+	@GET
 	@Path("/theamwatcher/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
