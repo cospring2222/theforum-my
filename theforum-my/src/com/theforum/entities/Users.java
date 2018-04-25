@@ -42,9 +42,6 @@ public class Users implements java.io.Serializable {
 	@Column(name = "user_id", unique = true, nullable = false)
 	private long userId;
 	
-	@Column(name = "user_email")
-	private String userEmail;
-	
 	@Column(name = "user_from")
 	private String userFrom;
 	
@@ -109,12 +106,11 @@ public class Users implements java.io.Serializable {
 		this.userId = userId;	
 	}
 
-	public Users(long userId, String userEmail, String userFrom, Boolean deleted, Date userLastvisit,
+	public Users(long userId, String userFrom, Boolean deleted, Date userLastvisit,
 			String userPassword, Date userRegdate, Role userRole, String username,String userFirstName,String userSecondName,
 			List<UserMessages> userMessgesesForUsermsgsToUserid, List<Topics> topicses,
 			List<UserMessages> userMessgesesForUsermsgsFromUserid, List<Posts> postses) {
 		this.userId = userId;
-		this.userEmail = userEmail;
 		this.userFrom = userFrom;
 		this.deleted = deleted;
 		this.userLastvisit = userLastvisit;
@@ -138,15 +134,6 @@ public class Users implements java.io.Serializable {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
-	}
-
-
-	public String getUserEmail() {
-		return this.userEmail;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
 	}
 
 

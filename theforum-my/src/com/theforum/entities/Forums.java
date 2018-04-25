@@ -36,7 +36,6 @@ public class Forums implements java.io.Serializable {
 	
 
 	private List<Topics> topicses = new ArrayList<Topics>(0);
-	private List<Posts> postses = new ArrayList<Posts>(0);
 
 	
 	
@@ -53,14 +52,12 @@ public class Forums implements java.io.Serializable {
 		this.forumId = forumId;
 	}
 
-	public Forums(long forumId, String forumDescription, Integer forumOrder, String forumName, List<Topics> topicses,
-			List<Posts> postses) {
+	public Forums(long forumId, String forumDescription, Integer forumOrder, String forumName, List<Topics> topicses) {
 		this.forumId = forumId;
 		this.forumDescription = forumDescription;
 		this.forumOrder = forumOrder;
 		this.forumName = forumName;
 		this.topicses = topicses;
-		this.postses = postses;
 	}
 
 	@Id
@@ -125,13 +122,5 @@ public class Forums implements java.io.Serializable {
 		this.topicses = topicses;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "forums")
-	public List<Posts> getPostses() {
-		return this.postses;
-	}
-
-	public void setPostses(List<Posts> postses) {
-		this.postses = postses;
-	}
 
 }

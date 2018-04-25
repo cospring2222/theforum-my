@@ -25,11 +25,9 @@ import com.theforum.util.DateUtils;
 public class Posts implements java.io.Serializable {
 
 	private long postId;
-	private Forums forums;
 	private Topics topics;
 	private Users users;
 	private Date postDate;
-	private String postSubject;
 	private String postText;
 
 	public Posts() {
@@ -40,14 +38,12 @@ public class Posts implements java.io.Serializable {
 		this.postId = postId;
 	}
 
-	public Posts(long postId, Forums forums, Topics topics, Users users, Date postDate, String postSubject,
+	public Posts(long postId,  Topics topics, Users users, Date postDate,
 			String postText) {
 		this.postId = postId;
-		this.forums = forums;
 		this.topics = topics;
 		this.users = users;
 		this.postDate = postDate;
-		this.postSubject = postSubject;
 		this.postText = postText;
 	}
 
@@ -60,16 +56,6 @@ public class Posts implements java.io.Serializable {
 
 	public void setPostId(long postId) {
 		this.postId = postId;
-	}
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "forum_id")
-	public Forums getForums() {
-		return this.forums;
-	}
-
-	public void setForums(Forums forums) {
-		this.forums = forums;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -100,15 +86,6 @@ public class Posts implements java.io.Serializable {
 
 	public void setPostDate(Date postDate) {
 		this.postDate = postDate;
-	}
-
-	@Column(name = "post_subject")
-	public String getPostSubject() {
-		return this.postSubject;
-	}
-
-	public void setPostSubject(String postSubject) {
-		this.postSubject = postSubject;
 	}
 
 	@Column(name = "post_text")

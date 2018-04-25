@@ -31,11 +31,9 @@ public class UserMessages implements java.io.Serializable {
 	private Users usersByUsermsgsToUserid;
 	private Users usersByUsermsgsFromUserid;
 	private Date usermsgsDate;
-	private String usermsgsSubject;
 	private String usermsgsText;
 
 	public UserMessages() {
-//		setUsermsgsDate(DateUtils.parseDate(LocalDate.now().toString()));
 		setUsermsgsDate(new Date());
 	}
 
@@ -44,12 +42,11 @@ public class UserMessages implements java.io.Serializable {
 	}
 
 	public UserMessages(long id, Users usersByUsermsgsToUserid, Users usersByUsermsgsFromUserid, Date usermsgsDate,
-			String usermsgsSubject, String usermsgsText) {
+						String usermsgsText) {
 		this.id = id;
 		this.usersByUsermsgsToUserid = usersByUsermsgsToUserid;
 		this.usersByUsermsgsFromUserid = usersByUsermsgsFromUserid;
 		this.usermsgsDate = usermsgsDate;
-		this.usermsgsSubject = usermsgsSubject;
 		this.usermsgsText = usermsgsText;
 	}
 
@@ -94,15 +91,6 @@ public class UserMessages implements java.io.Serializable {
 
 	public void setUsermsgsDate(Date usermsgsDate) {
 		this.usermsgsDate = usermsgsDate;
-	}
-
-	@Column(name = "usermsgs_subject")
-	public String getUsermsgsSubject() {
-		return this.usermsgsSubject;
-	}
-
-	public void setUsermsgsSubject(String usermsgsSubject) {
-		this.usermsgsSubject = usermsgsSubject;
 	}
 
 	@Column(name = "usermsgs_text")
